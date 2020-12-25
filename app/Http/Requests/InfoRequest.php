@@ -24,7 +24,7 @@ class InfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'id_nv' => 'required',
+           
             'name_nv' => 'required',
             'gmail_nv' => 'required',
             'password' => 'required',
@@ -35,9 +35,10 @@ class InfoRequest extends FormRequest
     public function messages ()
     {
         return [
-            'id_nv.required' => 'Nhập ID',
+           
             'name_nv.required' => 'Tên nhân viên',
             'gmail_nv.required' => 'Nhập mail nhân viên',
+            'gmail_nv.unique' => 'Email này đã tồn tại',
             'password.required' => 'Thiết lập pass cho nhân viên',
             'phone_nv.required' => 'Số điện thoại nhân viên',
             'team_nv.required' => 'Chọn team',

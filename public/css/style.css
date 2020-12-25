@@ -32,19 +32,30 @@ input[type="file"] {
 .analytics-top {
    margin-top: 20px;
    padding: 10px;
-   font-family: 'Literata', serif;        
+  font-family: 'Inter', sans-serif;        
 }
 .analytics-top h4 {
-     font-family: 'Literata', serif;
+     font-family: 'Inter', sans-serif;
      color: #FE2E2E;
+
 }
 .view {
-    font-size: 25px;
-    color: #0040FF;
+    font-size: 30px;
+    color: #1574fb;
+    font-weight: 900px;
+     font-family: 'Inter', sans-serif;
+
+}
+.day_view {
+    font-size: 18px;
+    font-weight: 500;
+    color: gray;
+    font-family: 'Inter', sans-serif; 
 }
 .one_col{
-    background-image: linear-gradient(to bottom right, #E6E6E6,#E6F8E0);
+    background-image: #FAFAFA;
     border-radius:5px
+    
 }
 .analytics-icon  {
   margin-top: 17px;

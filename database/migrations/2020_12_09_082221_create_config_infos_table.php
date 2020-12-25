@@ -16,7 +16,6 @@ class CreateConfigInfosTable extends Migration
         Schema::create('config_infos', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('id_nv');
             $table->string('phone_nv');
             $table->string('team_nv');
             $table->timestamps();

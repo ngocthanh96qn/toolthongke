@@ -19,7 +19,7 @@ class ConfigInfoController extends Controller
         $users = User::all()->toArray();
         foreach ($users as $key => $user) {
             $info = User::find($user['id'])->configInfos->toArray();            
-            $info_user[] = ['user_id'=>$user['id'],'id_nv'=>$info['id_nv'], 'name'=>$user['name'], 'mail_nv'=>$user['email'], 'phone_nv'=>$info['phone_nv'], 'team_nv'=>$info['team_nv']];           
+            $info_user[] = ['user_id'=>$user['id'], 'name'=>$user['name'], 'mail_nv'=>$user['email'], 'phone_nv'=>$info['phone_nv'], 'team_nv'=>$info['team_nv']];           
         }
         return view('pages.setup_info',['info_user'=>$info_user]);
     }
@@ -45,7 +45,7 @@ class ConfigInfoController extends Controller
     {
       $data_user = ['name'=>$request->name_nv, 'email'=>$request->gmail_nv, 'password'=>\Hash::make($request->password)];
       $user = User::create($data_user);
-      $data_user = ['user_id'=>$user->id, 'id_nv'=>$request->id_nv, 'phone_nv'=>$request->phone_nv, 'team_nv'=>$request->team_nv];
+      $data_user = ['user_id'=>$user->id, 'phone_nv'=>$request->phone_nv, 'team_nv'=>$request->team_nv];
       ConfigInfo::create($data_user);
       return redirect()->route('menu.setup_info');
     }
@@ -73,7 +73,7 @@ class ConfigInfoController extends Controller
        $user = User::find($request->userid);
        $data_user = ['name'=>$request->name_nv, 'email'=>$request->gmail_nv];
        $user->update($data_user);
-       $data_info = ['id_nv'=>$request->id_nv, 'phone_nv'=>$request->phone_nv, 'team_nv'=>$request->team_nv];
+       $data_info = ['phone_nv'=>$request->phone_nv, 'team_nv'=>$request->team_nv];
        $info = ConfigInfo::where('user_id','=',$request->userid)->update($data_info);
        return redirect()->route('menu.setup_info');
     }

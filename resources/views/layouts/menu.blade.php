@@ -7,7 +7,14 @@
         <span> QL THÔNG TIN NV</span>
       </a>
     </li>
- 
+  
+    <li class="active">
+      <a href="{{ route('menu.setup_page') }}">
+        <i class="fa fa-video-camera"></i>
+        <span> QL Page NV</span>
+      </a>
+    </li>
+
     <li class="active">
       <a href="#">
         <i class="fa fa-money"></i>
@@ -29,3 +36,9 @@
       </a>
     </li>
     
+    <li class="active">
+      <a href="{{ route('menu.analytic_total') }}">
+        <i class="fa fa-money"></i>
+        <span>QUẢN LÍ TỔNG TEAM IA </span>
+      </a>
+    </li>

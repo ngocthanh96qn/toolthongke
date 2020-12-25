@@ -35,13 +35,7 @@
                   <!-- text input -->
                   @csrf               
                   
-                  <div class="form-group">
-                    <label> ID NHÂN VIÊN </label>
-                    <input type="text" class="form-control" placeholder="" name="id_nv" value="{{old('id_nv')}}" >
-                    @if($errors->has('id_nv'))
-                    <p class="errors" style="color:red">{{$errors->first('id_nv')}}</p>
-                    @endif
-                  </div> 
+                  
                   <div class="form-group">
                     <label> TÊN </label>
                     <input type="text" class="form-control" placeholder="" name="name_nv" value="{{old('name_nv')}}">
@@ -107,7 +101,7 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>STT</th>
                   <th>Tên</th>
                   <th>Gmail</th>
                   <th>Team</th>
@@ -118,15 +112,15 @@
                 </tr>
                 </thead>
                 <tbody>
-               @foreach ($info_user as $info)
+               @foreach ($info_user as $key => $info)
                  <tr>
-                   <td>{{$info['id_nv']}}  </td>
+                   <td>{{$key+1}}   </td>
                    <td>{{$info['name']}}   </td>
                    <td>{{$info['mail_nv']}}</td>
                    <td>{{$info['team_nv']}}</td>
                    <td>Rest pass</td>
                    <td>{{$info['phone_nv']}}</td>
-                   <td> <button class="btn btn-primary btn-xs edit_info"  data-toggle="modal" data-target="#modal-default" data-idnv ='{{$info['id_nv']}}' data-name ='{{$info['name']}}' data-phone ='{{$info['phone_nv']}}' data-mail ='{{$info['mail_nv']}}' data-team ='{{$info['team_nv']}}' data-userid='{{$info['user_id']}}' ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                   <td> <button class="btn btn-primary btn-xs edit_info"  data-toggle="modal" data-target="#modal-default"  data-name ='{{$info['name']}}' data-phone ='{{$info['phone_nv']}}' data-mail ='{{$info['mail_nv']}}' data-team ='{{$info['team_nv']}}' data-userid='{{$info['user_id']}}' ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
 
                    <td  data-toggle="modal" data-target="#modal-danger" > <button class="btn btn-danger btn-xs delete_info" data-userid='{{$info['user_id']}}'><i class="fa fa-trash-o"></i></button> </td>
                  </tr>
@@ -181,13 +175,7 @@
                   <!-- text input -->
                   @csrf               
                   
-                  <div class="form-group">
-                    <label> ID NHÂN VIÊN </label>
-                    <input type="text" class="form-control" name="id_nv" id="edit_idnv" value="{{old('id_nv')}}" >
-                    @if($errors->has('id_nv'))
-                    <p class="errors" style="color:red">{{$errors->first('id_nv')}}</p>
-                    @endif
-                  </div> 
+                  
                   <div class="form-group">
                     <label> TÊN </label>
                     <input type="text" class="form-control"  id="edit_name" name="name_nv" value="{{old('name_nv')}}">
@@ -232,8 +220,7 @@
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
-        </div>
-
+        </div> {{-- //end--}}
         </div>
         <!-- /.col -->
     </div> {{--End Cột Bảng token --}}
@@ -288,13 +275,11 @@ $(function(){
     }
 
         $('.edit_info').click(function(){
-        var idnv = $(this).data("idnv");
         var name = $(this).data("name"); 
         var mail = $(this).data("mail"); 
         var phone = $(this).data("phone"); 
         var team = $(this).data("team");
         var userid = $(this).data("userid");
-        document.getElementById("edit_idnv").value=(idnv);
         document.getElementById("edit_name").value=(name);
         document.getElementById("edit_mail").value=(mail);
         document.getElementById("edit_phone").value=(phone);

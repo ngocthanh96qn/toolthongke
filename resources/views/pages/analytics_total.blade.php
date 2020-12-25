@@ -14,65 +14,20 @@
 
 @section('content')
 
-<div class="container">
+<div class="container ">
+  <div class="row analytics-top">
+    <a href="{{ route('setup_total') }}"><button class="btn btn-warning btn-block add_page"  data-toggle="modal" data-target="#modal-new"> CẤU HÌNH </button></a>
+  </div>
   <hr>
     <div class="row">
-{{--      <div class="col-md-3 analytics-top" >
-      <div class="one_col">
-
-        <div class="row nopadding">
-        <div class="col-xs-2 col-xs-offset-3">
-          <i class="fa fa-line-chart analytics-icon" aria-hidden="true"></i>
-        </div>
-        <div class="col-xs-6 ">
-           <h4 class="analytics-icon">Hôm nay</h4>
-        </div>
-      </div>
-
-      <div class="row " style="margin-top: 15px; margin-bottom: 20px">
-        <div class="col-md-5 col-xs-offset-1">
-          <span class="view" > 
-            @php
-              $view_today = 0;
-              foreach ($data_page as $key => $page) {
-                $view_today = $view_today + $page['data'][0][1];
-              }
-            @endphp
-            {{number_format($view_today,"0",".",".")}}
-          </span>
-        </div>
-        <div class="col-md-6">
-          <p class="analytics-view">+{{ number_format($view_today*1.5)}} &ensp;<i class="fa fa-money" aria-hidden="true"></i></p> 
-        </div>
-      </div>
-
-      @foreach ($data_page as $page)
-        <div class="row" style="padding: 5px" >
-        <div class="col-xs-5" >
-          <span class="font-bold text-gray-600">{{$page['name']}} </span>
-        </div>
-        <div class="col-xs-7">
-          <span><i class="fa fa-eye" aria-hidden="true">&emsp; {{$page['data'][0][1]}} </i></span> &emsp;
-          {{ <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span> --}}
-      {{--   </div>
-      </div>
-      @endforeach
-      
-      </div>
-     </div> --}}
 
           <div class="col-md-4 analytics-top" >
       <div class="one_col">
       <div class="row " style=" margin-bottom: 20px">
         <div class="col-md-12 col-xs-offset-1">
           <span class="view" >
-             @php
-              $view_yesterday = 0;
-              foreach ($data_page as $key => $page) {
-                $view_yesterday = $view_yesterday + $page['data'][1][1];
-              }
-            @endphp
-            {{number_format($view_yesterday,"0",".",".")}}
+             
+            {{number_format($data['yesterday'],"0",".",".")}}
 
           </span>
           <span class="day_view">Hôm qua</span>
@@ -80,17 +35,17 @@
        
       </div>
 
-      @foreach ($data_page as $page)
+    {{--   @foreach ($data_page as $page)
         <div class="row" style="padding: 5px" >
         <div class="col-xs-5" >
           <span class="font-bold text-gray-600">{{$page['name']}} </span>
         </div>
         <div class="col-xs-7">
-          <span><i class="fa fa-eye" aria-hidden="true"> &emsp; {{$page['data'][1][1]}} </i></span> &emsp;
+          <span><i class="fa fa-eye" aria-hidden="true"> &emsp; {{$page['data'][1][1]}} </i></span> &emsp; --}}
           {{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span> --}}
-        </div>
+   {{--      </div>
       </div>
-      @endforeach
+      @endforeach --}}
 
       </div>
      </div>
@@ -100,31 +55,20 @@
       <div class="row " style=" margin-bottom: 20px">
         <div class="col-md-12 col-xs-offset-1">
           <span class="view" >
-            @php
-              $view_month = 0;
-              foreach ($data_page as $key => $page) {
-                $view_month = $view_month + $page['view_month'];
-              }
-            @endphp
-             {{number_format($view_month,"0",".",".")}}
+             {{number_format($data['thisMonth'],"0",".",".")}}
           </span>
           <span class="day_view">Tháng này</span>
-        </div>
-        
+        </div> 
       </div>
-
-      @foreach ($data_page as $page)
         <div class="row" style="padding: 5px" >
         <div class="col-xs-5" >
-          <span class="font-bold text-gray-600">{{$page['name']}} </span>
+          <span class="font-bold text-gray-600">  </span>
         </div>
         <div class="col-xs-7">
-          <span><i class="fa fa-eye" aria-hidden="true"> &emsp; {{$page['view_month']}} </i></span>
+          {{-- <span><i class="fa fa-eye" aria-hidden="true"> &emsp; {{$page['view_month']}} </i></span> --}}
           {{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span> --}}
         </div>
-      </div>
-      @endforeach
-      
+      </div>     
       </div>
      </div>
 
@@ -132,16 +76,20 @@
         
         <div class="row">
           <div style="margin-top: 10px;">
-            <input  type="text" class="knob" value="30" data-width="90" data-height="90" data-fgColor="#FE642E" data-readonly="true">
+            @php
+              $before = $data['beforeMonth']+$data['beforeMonth']*0.2;
+              $phantram = ($data['thisMonth']/$before)*100;
+            @endphp
+            <input  type="text" class="knob" value="{{number_format($phantram,"0")}}}" data-width="90" data-height="90" data-fgColor="#FE642E" data-readonly="true">
           </div>
         </div>
 
         <div class="row" style="padding: 5px" >
         <div class="col-xs-7" >
-          <span class="font-bold text-gray-600">Mục tiêu đặt ra: </span>
+          <span class="font-bold text-gray-600"> Mục tiêu đặt ra: </span>
         </div>
         <div class="col-xs-5">
-          <span><i class="fa fa-eye" aria-hidden="true"> 234523 </i></span> &emsp;      
+          <span><i class="fa fa-eye" aria-hidden="true"> {{number_format($data['beforeMonth']+$data['beforeMonth']*0.2,"0",".",".")}} </i></span> &emsp;      
         </div>
       </div>
       <div class="row" style="padding: 5px" >
@@ -149,26 +97,48 @@
           <span class="font-bold text-gray-600"> Đã đạt được: </span>
         </div>
         <div class="col-xs-5">
-          <span><i class="fa fa-eye" aria-hidden="true"> 234523 </i></span> &emsp;
+          <span><i class="fa fa-eye" aria-hidden="true">  {{number_format($data['thisMonth'],"0",".",".")}} </i></span> &emsp;
         </div>
       </div>
         
     </div>
 
     </div>
-<hr>
-    <div class="row" style=" height: 350px">
-      <canvas id="myChart"></canvas>
+    <div class="row">
+      <canvas id="myChart" style=" height: 350px"></canvas>
     </div>
 <hr>
+    <div class="row"  >
+      <div class="col-md-4 col-md-offset-2 " >
+        <h4 class="text-center">Thống kê nhân viên Hôm qua</h4>
+        <canvas id="myChart1"></canvas>
+      </div>
+      <div class="col-md-4 col-md-offset-2">
+        <h4 class="text-center">Thống kê Nhân viên Tháng này</h4>
+        <canvas id="myChart2" ></canvas>
+      </div>
+    </div>
+<hr>
+    
+    <div class="row"  >
+      <div class="col-md-4 col-md-offset-2 " >
+        <h4 class="text-center">Thống kê Trang Hôm qua</h4>
+        <canvas id="myChart3"></canvas>
+      </div>
+      <div class="col-md-4 col-md-offset-2">
+        <h4 class="text-center">Thống kê Trang Tháng này</h4>
+        <canvas id="myChart4" ></canvas>
+      </div>
+    </div>
+
     <div class="row">
-     @foreach ($data_page as $i=>$element)
+     {{-- @foreach ($data_page as $i=>$element)
        <div class="col-md-6">
          <figure class="highcharts-figure">
           <div id="container{{$i}}"></div>
         </figure>
       </div>
-     @endforeach   
+     @endforeach  --}}  
     </div>
 
     </div>
@@ -178,6 +148,7 @@
 @push('scripts')
  <!-- jQuery Knob -->
 <script src="../../admin-lte/bower_components/jquery-knob/js/jquery.knob.js"></script>
+{{-- <script src="../../admin-lte/bower_components/chart.js/Chart.js"></script> --}}
 <script type="text/javascript">
    $(function () {
     /* jQueryKnob */
@@ -236,15 +207,15 @@
     });
   });
 ///////////////////////////////////////////////
-
+    var color = ['#0967D2','#F7C948','#EF4E4E','#F9703E','#0D0E10','#3AE7E1'];
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: {!! $data_total['x'] !!},
+            labels: {!! json_encode($data['viewDay']['day']) !!},
             datasets: [{
-                label: 'Tổng view theo ngày tính từ đầu tháng', // Name the series
-                data: {!! $data_total['y'] !!}, // Specify the data values array
+                label: 'View', // Name the series
+                data: {!! json_encode($data['viewDay']['data'])!!}, // Specify the data values array
                 fill: false,
                 borderColor: '#2196f3', // Add custom color border (Line)
                 backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
@@ -277,10 +248,98 @@
         }
         }
     });
+    ////
+    var ctx = document.getElementById("myChart1").getContext('2d');
+    var myChart1 = new Chart(ctx, {
+        type: 'doughnut',
+  data: {
+    labels: {!! json_encode($data['statisNv'][0][0])!!},
+    datasets: [{
+     
+      data: {!! json_encode($data['statisNv'][0][1])!!},
+      backgroundColor: color,
+      borderColor: color,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    //cutoutPercentage: 40,
+    responsive: false,
+     legend: {
+          display: false
+        }
+  }
+    });
+    ///
+    var ctx = document.getElementById("myChart2").getContext('2d');
+    var myChart2 = new Chart(ctx, {
+        type: 'doughnut',
+  data: {
+    labels:  {!! json_encode($data['statisNv'][1][0])!!},
+    datasets: [{
+      label: '# of Tomatoes',
+      data:  {!! json_encode($data['statisNv'][1][1])!!},
+      backgroundColor: color,
+      borderColor: color,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    //cutoutPercentage: 40,
+    responsive: false,
+    legend: {
+          display: false
+        }
+  }
+    });
+    //////
+        var ctx = document.getElementById("myChart3").getContext('2d');
+    var myChart3 = new Chart(ctx, {
+        type: 'doughnut',
+  data: {
+    labels:  {!! json_encode($data['statisPage'][0][0])!!},
+    datasets: [{
+      label: '# of Tomatoes',
+      data:  {!! json_encode($data['statisPage'][0][1])!!},
+      backgroundColor: color,
+      borderColor:color,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    //cutoutPercentage: 40,
+    responsive: false,
+    legend: {
+          display: false
+        }
+  }
+    });
+    ////
+        var ctx = document.getElementById("myChart4").getContext('2d');
+    var myChart4 = new Chart(ctx, {
+        type: 'doughnut',
+  data: {
+    labels:  {!! json_encode($data['statisPage'][1][0])!!},
+    datasets: [{
+      label: '# of Tomatoes',
+      data:  {!! json_encode($data['statisPage'][1][1])!!},
+      backgroundColor:color,
+      borderColor: color,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    //cutoutPercentage: 40,
+    responsive: false,
+    legend: {
+          display: false
+        }
+  }
+    });
 </script>
 
 <script type="text/javascript">
-  var data_page = {!! json_encode($data_page) !!};
+  var data_page = {name:'fdsl',data:'23019'};
 for (var i = 0; i < data_page.length; i++) {
 
   var data = data_page[i].data.splice(7);
