@@ -74,6 +74,17 @@
                     @if($errors->has('team_nv'))
                     <p class="errors" style="color:red">{{$errors->first('team_nv')}}</p>
                     @endif
+                  </div>
+                  <div class="form-group">
+                    <label> CHỌN QUYỀN </label>
+                    <select class="form-control" name="roles">
+                      <option disabled selected>-- Chọn quyền --</option>
+                        <option value='1'> Admin </option>
+                        <option value='2'> Nhân Viên </option>               
+                    </select>
+                    @if($errors->has('roles'))
+                    <p class="errors" style="color:red">{{$errors->first('roles')}}</p>
+                    @endif
                   </div> 
                   <div class="box-footer">
                 <label id="cancel_add" class="btn btn-default">HỦY</label>
@@ -107,6 +118,7 @@
                   <th>Team</th>
                   <th>Password</th>
                   <th>Số điện thoại</th>
+                  <th>Quyền</th>
                   <th>Chỉnh sửa</th>
                   <th>Xóa</th>
                 </tr>
@@ -118,8 +130,9 @@
                    <td>{{$info['name']}}   </td>
                    <td>{{$info['mail_nv']}}</td>
                    <td>{{$info['team_nv']}}</td>
-                   <td>Rest pass</td>
+                   <td  data-toggle="modal" data-target="#modal-danger1" > <button class="btn btn-warning btn-xs reset-pass" data-userid='{{$info['user_id']}}'>Reset pass</button> </td>
                    <td>{{$info['phone_nv']}}</td>
+                   <td>{{$info['role']}}</td>
                    <td> <button class="btn btn-primary btn-xs edit_info"  data-toggle="modal" data-target="#modal-default"  data-name ='{{$info['name']}}' data-phone ='{{$info['phone_nv']}}' data-mail ='{{$info['mail_nv']}}' data-team ='{{$info['team_nv']}}' data-userid='{{$info['user_id']}}' ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
 
                    <td  data-toggle="modal" data-target="#modal-danger" > <button class="btn btn-danger btn-xs delete_info" data-userid='{{$info['user_id']}}'><i class="fa fa-trash-o"></i></button> </td>
@@ -134,6 +147,7 @@
           </div>
 
           <div class="modal modal-danger fade" id="modal-danger">
+            <!-- modal-dialog -->
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -158,7 +172,37 @@
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
+         </div>
+         {{-- //// --}}
+         <div class="modal modal-warning fade" id="modal-danger1">
+            <!-- modal-dialog -->
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Thay đổi mật khẩu</h4>
+              </div>
+              <form role="form" action="{{ route('edit_pass') }}" method="POST">
+                  @csrf
+              <div class="modal-body text-center">
+                <label>Nhập mật khẩu mới:&emsp; </label>
+                <input  type="text" name="pass_new" style="border-radius: 5px; color: black" >
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Hủy</button>
+                  <input type="hidden" id= "user_idRs" name="userid" value="">
+                <button type="sumbit" class="btn btn-outline"> Thay đổi password</button>
+                </form>
+                
+                
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
         </div>
+        {{-- //// --}}
           <!-- /.box -->
           <div class="modal fade" id="modal-default">
           <div class="modal-dialog">
@@ -290,6 +334,10 @@ $(function(){
         $('.delete_info').click(function(){
         var userid = $(this).data("userid");
          document.getElementById("delete_id").value=(userid);
+         });
+        $('.reset-pass').click(function(){
+        var userid = $(this).data("userid");
+         document.getElementById("user_idRs").value=(userid);
          });
         
 });

@@ -26,10 +26,11 @@ class InfoRequest extends FormRequest
         return [
            
             'name_nv' => 'required',
-            'gmail_nv' => 'required',
+            'gmail_nv' => 'required|email|unique:users,email',
             'password' => 'required',
             'phone_nv' => 'required',
             'team_nv' => 'required',
+            'roles' => 'required',
         ];
     }
     public function messages ()
@@ -42,6 +43,7 @@ class InfoRequest extends FormRequest
             'password.required' => 'Thiết lập pass cho nhân viên',
             'phone_nv.required' => 'Số điện thoại nhân viên',
             'team_nv.required' => 'Chọn team',
+            'roles.required' => 'Chọn quyền',
         ];
     }
 }

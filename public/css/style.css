@@ -109,3 +109,7 @@ input[type="file"] {
 .highcharts-data-table tr:hover {
     background: #f1f7ff;
 }
+/*///////////*/
+.bg-cus {
+  background-image: linear-gradient(to right, #577590 , #D78A76);
+}

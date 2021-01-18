@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ConfigPage;
 use Illuminate\Http\Request;
 use App\User;
+use App\Http\Requests\PageRequest;
 class ConfigPageController extends Controller
 {
     /**
@@ -48,7 +49,7 @@ class ConfigPageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
         $data = $request->except('_token');
         ConfigPage::create($data);

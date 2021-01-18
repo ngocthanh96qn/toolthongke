@@ -6,7 +6,7 @@
 
 
 @section('content')
-<div class="container-fluid" style="margin-top: 15px;">
+<div class="container-fluid" >
     <div class="row" style="margin-top: 20px;">
       @foreach ($info_user as $user)
        <div class="col-md-6">
@@ -73,8 +73,8 @@
                   <div class="form-group">
                     <label> utm_source </label>
                     <input type="text" class="form-control"  id="edit_source" name="utm_source" value="">
-                    @if($errors->has('utm_medium'))
-                    <p class="errors" style="color:red">{{$errors->first('utm_medium')}}</p>
+                    @if($errors->has('utm_source'))
+                    <p class="errors" style="color:red">{{$errors->first('utm_source')}}</p>
                     @endif
                   </div>
                   <div class="form-group">

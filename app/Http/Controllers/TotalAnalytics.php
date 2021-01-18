@@ -16,54 +16,70 @@ use DB;
 class TotalAnalytics extends Controller
 {
     public function index(){
-    	$month = $this->getDayOfMonth();
-    	$viewDay = $this->viewDay($month);
-    	$yesterday=$this->viewYesterday();
-    	$thisMonth=$this->viewThisMonth();
-    	$beforeMonth=$this->viewBeforeMonth();
-    	$statisNv = $this->statisNv();
-    	$statisPage = $this->statisPage();
-    	$data=['yesterday'=>$yesterday,'thisMonth'=>$thisMonth,'beforeMonth'=>$beforeMonth,'viewDay'=>$viewDay,'statisNv'=>$statisNv,'statisPage'=>$statisPage];
-    	return view('pages.analytics_total',['data'=>$data]);
+        $statisNv = $this->statisNv(); //view nhân viên hôm qua tháng này tháng trước
+        $statisPage = $this->statisPage(); //view page hôm qua tháng này
+    	$month = $this->getDayOfMonth(); //lấy ngày trong tháng
+    	$viewDay = $this->viewDay($month); //ngày và view từng ngày của tháng 
+    	$totalViewId = $this->totalViewId(); //view từng view ID view tháng này, view tháng trước
+        //code sắp xếp rankNv
+        foreach ($statisNv as $key => $value) {
+            $rankNv[$key] = $value['view_nv_month'];
+        }
+        arsort($rankNv);
+        foreach ($statisNv as $key => $value) {
+            $rankNvYesterday[$key] = $value['view_nv_yesterday'];
+        }
+        arsort($rankNvYesterday);
+        ///
+        //code sắp xếp rankPage
+        foreach ($statisPage as $key => $value) {
+            $rankPage[$key] = $value['thisMonth'];
+        }
+        arsort($rankPage);
+        foreach ($statisPage as $key => $value) {
+            $rankPageYesterday[$key] = $value['yesterday'];
+        }
+        arsort($rankPageYesterday);
+        ///
+    	$data=['statisNv'=>$statisNv,'statisPage'=>$statisPage,'viewDay'=>$viewDay,'viewDay'=>$viewDay,'totalViewId'=>$totalViewId,'rankNv'=>$rankNv,'rankPage'=>$rankPage,'rankNvYesterday'=>$rankNvYesterday,'rankPageYesterday'=>$rankPageYesterday];
+        // dd($data);
+    	return view('pages.pageTotal',['data'=>$data]);
     }
     public function statisNv(){
     	$users = User::where('check','=','checked')->get();
+
     	foreach ($users as $key => $user) {
+            // dd($user->id);
     		$info = User::find($user->id)->configPages->toArray();    
     		foreach ($info as $key => $value) {
     			$data_nv[$user->name][$key]['viewId']=$value['view_id'];
     			$data_nv[$user->name][$key]['source']=$value['utm_source'];
+                $data_nv[$user->name][$key]['id']=$user->id;
     			$data_nv[$user->name] = array_unique($data_nv[$user->name],0);
     		}
+            
     	}
+        // dd($data_nv);
     	foreach ($data_nv as $nv_name => $nv) { //[nv=>viewid và source]
-    		$view_nv_week[$nv_name]=0;
-    		$view_nv_month[$nv_name]=0;
+    		$statisNv[$nv_name]['view_nv_yesterday']=0;
+    		$statisNv[$nv_name]['view_nv_month']=0;
+            $statisNv[$nv_name]['view_nv_beforeMonth']=0;
     		foreach ($nv as $key => $info) { //[viewid va source]
     			$view = $this->statisNvYesterday($info);
     			if (isset($view[0][0])) {
-    				$view_nv_week[$nv_name] = $view_nv_week[$nv_name] + $view[0][0];
+    				$statisNv[$nv_name]['view_nv_yesterday'] = $statisNv[$nv_name]['view_nv_yesterday'] + $view[0][0];
     			}
     			$view = $this->statisNvMonth($info);
     			if (isset($view[0][0])) {
-    				$view_nv_month[$nv_name] = $view_nv_month[$nv_name] + $view[0][0];
-    			}   	   				
+    				$statisNv[$nv_name]['view_nv_month'] = $statisNv[$nv_name]['view_nv_month'] + $view[0][0];
+    			}   
+                $view = $this->statisNvBeforeMonth($info);
+                if (isset($view[0][0])) {
+                    $statisNv[$nv_name]['view_nv_beforeMonth'] = $statisNv[$nv_name]['view_nv_beforeMonth'] + $view[0][0];
+                } 
+                $statisNv[$nv_name]['id']=	$info['id'];  				
     		}
     	}
-    	foreach ($view_nv_week as $name_w => $view_w) {
-    		$name1[]=$name_w;
-    		$view1[]=$view_w;
-    	}
-    	foreach ($view_nv_month as $name => $view) {
-    		$name2[]=$name;
-    		$view2[]=$view;
-    	}
-    	$statisNv_week[]=$name1;
-    	$statisNv_week[]=$view1;
-    	$statisNv_Month[]=$name2;
-    	$statisNv_Month[]=$view2;
-    	$statisNv[0]=$statisNv_week;
-    	$statisNv[1]=$statisNv_Month;
     	return $statisNv;
     }
 
@@ -84,40 +100,44 @@ class TotalAnalytics extends Controller
     	$response = Analytics::performQuery($day,'ga:sessions',['filters'=>'ga:source=='.$info['source']]);//tong view
     	return $response->rows;
     }
-/////////////////////////////////
+     public function statisNvBeforeMonth($info){
+        Analytics::setViewId($info['viewId']);
+        $endMonth = Carbon::today()->subDay(Carbon::now()->day);
+        $month = $endMonth->month;
+        $year = $endMonth->year;
+        $firstMonth = "1-".$month."-".$year;
+        $firstMonth = Carbon::create($firstMonth); 
+        $day = Period::create($firstMonth, $endMonth);
+        $response = Analytics::performQuery($day,'ga:sessions',['filters'=>'ga:source=='.$info['source']]);//tong view
+        return $response->rows;
+    }
+///////////////////////////////// Thống kê page
     public function statisPage(){
     	$pages = ConfigPage::where('check','=','checked')->get();
+        // dd($pages);
     	foreach ($pages as $key => $page) {	  
     			$data_page[$page->name_page]['viewId']=$page->view_id;
     			$data_page[$page->name_page]['medium']=$page->utm_medium;   		
+                $data_page[$page->name_page]['source']=$page->utm_source;           
     	}
+
     	foreach ($data_page as $page_name => $info) { //[nv=>viewid và source]
     		
     			$view = $this->statisPageYesterday($info);
     			if (isset($view[0][0])) {
-    				$view_page_week[$page_name] = $view[0][0];
+                    $statisPage[$page_name]['yesterday'] = $view[0][0];
+    				// $view_page_week[$page_name] = $view[0][0];   
     			}
+                else {
+                    $statisPage[$page_name]['yesterday'] = 0;
+                }
     			$view = $this->statisPageMonth($info);
     			if (isset($view[0][0])) {
-    				$view_page_month[$page_name] =  $view[0][0];
+                    $statisPage[$page_name]['thisMonth'] = $view[0][0];
+    				// $view_page_month[$page_name] =  $view[0][0];
     			}   	   				
-    		
+    		$statisPage[$page_name]['source'] = $info['source'];
     	}
- 
-    	foreach ($view_page_week as $name_w => $view_w) {
-    		$name3[]=$name_w;
-    		$view3[]=$view_w;
-    	}
-    	foreach ($view_page_month as $name => $view) {
-    		$name4[]=$name;
-    		$view4[]=$view;
-    	}
-    	$statisPage_week[]=$name3;
-    	$statisPage_week[]=$view3;
-    	$statisPage_Month[]=$name4;
-    	$statisPage_Month[]=$view4;
-    	$statisPage[0]=$statisPage_week;
-    	$statisPage[1]=$statisPage_Month;
     	return $statisPage;
     }
 
@@ -141,7 +161,7 @@ class TotalAnalytics extends Controller
     public function setupTotal(){
     	$users = User::all()->toArray();
     	$pages = ConfigPage::all()->toArray();
-    	// dd($users);		
+        
     	return view('pages.setup_total',['users'=>$users,'pages'=>$pages]);
     }
     public function setupUser(Request $Request){
@@ -161,6 +181,21 @@ class TotalAnalytics extends Controller
 	    		}
     		}
     	return redirect()->route('setup_total');		
+    }
+////////////////
+    public function totalViewId(){ //co view hom qua, thang nay, thang trước
+                $view_id = DB::table('config_pages')->select('view_id')->get()->toArray();
+        foreach ($view_id as $key => $value) {
+           $viewID[] = $value->view_id;
+        }
+        $viewID = array_unique($viewID,0);
+        foreach ($viewID as $key => $view_id) {
+           Analytics::setViewId($view_id);
+            // $totalViewId[$view_id]['viewYesterday'] =  $this->viewYesterday();
+            $totalViewId[$view_id]['viewThisMonth'] =  $this->viewThisMonth();
+            $totalViewId[$view_id]['viewBeforeMonth'] =  $this->viewBeforeMonth();
+       }
+      return $totalViewId;
     }
 
     public function viewYesterday(){
@@ -190,17 +225,37 @@ class TotalAnalytics extends Controller
     	return $response->rows[0][0];
     }
     public function viewDay($month){
-    	
-    	foreach ($month as $key => $dayi) {
-    		$day1 = Carbon::create($dayi); 
-    		$day2 = Carbon::create($dayi); 
-    		$day = Period::create($day1, $day2);
-    		$response = Analytics::performQuery($day,'ga:sessions');
-    		$data_month['day'][] =$dayi;
-    		$data_month['data'][] =$response->rows[0][0]; 		 	
-    	}
-    	$data_month['day'] = array_reverse($data_month['day']);
-    	$data_month['data'] = array_reverse($data_month['data']);
+        $view_id = DB::table('config_pages')->select('view_id')->get()->toArray();
+        foreach ($view_id as $key => $value) {
+           $viewID[] = $value->view_id;
+        }
+        $viewID1 = array_unique($viewID,0);
+        $viewID = [];
+        foreach ($viewID1 as $key => $value) {
+           $viewID[] = $value;
+        }
+        foreach ($viewID as $keyid => $view_id) {
+           Analytics::setViewId($view_id);
+            foreach ($month as $key => $dayi) {
+                $days = Carbon::create($dayi);   
+                $startDate = $days;
+                $endDate = $days;
+                $day = Period::create($startDate, $endDate);
+                $response = Analytics::performQuery($day,'ga:sessions');
+                $data_month[$keyid]['day'][] =$dayi;
+
+                if (isset($response->rows[0][0])) {
+                    $data_month[$keyid]['data'][] =$response->rows[0][0];
+                } else {
+                     $data_month[$keyid]['data'][] =0;
+                }
+                            
+            }
+            $data_month[$keyid]['day'] = array_reverse($data_month[$keyid]['day']);
+            $data_month[$keyid]['data'] = array_reverse($data_month[$keyid]['data']);
+            $data_month[$keyid]['view_id'] =$view_id;
+        } 
+    
     	return $data_month;
     	
     }

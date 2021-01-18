@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <title>MediaNet</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-
+    <link rel="icon" href="{{ asset('image/icon.gif') }}" type="image/x-icon"/>
+<link rel="shortcut icon" href="{{ asset('image/icon.gif') }}" type="image/x-icon"/>
     <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="../../admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ asset('admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../admin-lte/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('admin-lte/bower_components/font-awesome/css/font-awesome.min.css') }}">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../admin-lte/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="{{ asset('admin-lte/dist/css/AdminLTE.min.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.3/css/skins/_all-skins.min.css">
 
@@ -23,7 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
 
     <!-- Ionicons -->
-    <link rel="stylesheet" href="../../admin-lte/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{ asset('admin-lte/bower_components/Ionicons/css/ionicons.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
 
     {{-- css --}}
@@ -96,7 +97,7 @@
         <!-- Left side column. contains the logo and sidebar -->
         @include('layouts.sidebar')
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="background-image: url('{{ asset('image/cover.jpg') }}');">
+        <div class="content-wrapper" style="background-image: linear-gradient(to right, #577590 , #D78A76);">
             @yield('content')
         </div>
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ConfigInfo;
+use App\ConfigPage;
 use App\User;
+use App\RoleUser;
 use Illuminate\Http\Request;
 use App\Http\Requests\InfoRequest;
 
@@ -18,9 +20,17 @@ class ConfigInfoController extends Controller
     {
         $users = User::all()->toArray();
         foreach ($users as $key => $user) {
-            $info = User::find($user['id'])->configInfos->toArray();            
-            $info_user[] = ['user_id'=>$user['id'], 'name'=>$user['name'], 'mail_nv'=>$user['email'], 'phone_nv'=>$info['phone_nv'], 'team_nv'=>$info['team_nv']];           
+            $info = User::find($user['id'])->configInfos->toArray();
+            $role =  RoleUser::where('user_id','=',$user['id'])->get()->toArray();
+            if ($role[0]['role_id']==1) {
+                $role ='Admin';
+                   }
+            else {
+                $role ='Nhân Viên';
+            }       
+            $info_user[] = ['user_id'=>$user['id'], 'name'=>$user['name'], 'mail_nv'=>$user['email'], 'phone_nv'=>$info['phone_nv'], 'team_nv'=>$info['team_nv'],'role'=> $role];           
         }
+        
         return view('pages.setup_info',['info_user'=>$info_user]);
     }
 
@@ -47,6 +57,8 @@ class ConfigInfoController extends Controller
       $user = User::create($data_user);
       $data_user = ['user_id'=>$user->id, 'phone_nv'=>$request->phone_nv, 'team_nv'=>$request->team_nv];
       ConfigInfo::create($data_user);
+      $data_role = ['user_id'=>$user->id, 'role_id'=>$request->roles];
+      RoleUser::create($data_role);
       return redirect()->route('menu.setup_info');
     }
 
@@ -78,6 +90,14 @@ class ConfigInfoController extends Controller
        return redirect()->route('menu.setup_info');
     }
 
+public function editPass(Request $request)
+    {
+       // dd($request->toArray());
+       $user = User::find($request->userid);
+       $data_user = ['password'=>\Hash::make($request->pass_new)];
+       $user->update($data_user);
+       return redirect()->route('menu.setup_info');
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -102,6 +122,7 @@ class ConfigInfoController extends Controller
         $info->delete();
         $user = User::find($request->id);
         $user->delete();
+        ConfigPage::where('user_id','=',$request->id)->delete();
         return redirect()->route('menu.setup_info');
     }
 }

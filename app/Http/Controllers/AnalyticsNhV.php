@@ -10,15 +10,24 @@ use Carbon\Carbon;
 use DateTime;
 use App\ConfigPage;
 use App\ConfigInfo;
+use App\User;
 use Auth;
 
 class AnalyticsNhV extends Controller
 {
-     public function index()
+     public function index($id=null)
     {
+        if ($id==null) {
+           $pages = ConfigPage::where('user_id','=',Auth::user()->id)->get()->toArray(); 
+           $nameUser = Auth::user()->name;
+        }
+        else {
+            $pages = ConfigPage::where('user_id','=',$id)->get()->toArray();
+            $nameUser = User::find($id)->name;
+           
+        }
 	
 	$month = $this->getDayOfMonth();
-    $pages = ConfigPage::where('user_id','=',Auth::user()->id)->get()->toArray();
     $view_page = $this->viewDay($pages,$month);
     $view_beforeMonth = $this->viewBeforeMonth($pages);
     //loc du lieu
@@ -48,7 +57,8 @@ class AnalyticsNhV extends Controller
     $data['view_page_thisMonth'] =$view_page_thisMonth;
     $data['bieu_do'] =$bieu_do;
     $data['view_beforeMonth'] =$view_beforeMonth;
-    // dd($view_beforeMonth);
+    $data['name'] =$nameUser;
+    // dd($data);
         return view('pages.pageNv',['data'=>$data]);
     }
 

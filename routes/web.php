@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('home');
-})->middleware('checkPer');
+});
 
 
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->middleware('verified')->name('home');
+Route::get('/home', 'HomeController@index')->middleware('checkPer')->name('home');
 
 // Auth::routes();
 
@@ -31,14 +31,16 @@ Route::group(['prefix' => 'menu','as'=>'menu.','middleware' => 'auth'],function 
 
 Route::get('setup/info', 'ConfigInfoController@index')->name('setup_info');
 Route::get('setup/page', 'ConfigPageController@index')->name('setup_page');
-Route::get('analytics/nhv', 'AnalyticsNhV@index')->name('analytic_nv');
-Route::get('analytics/total', 'TotalAnalytics@index')->name('analytic_total');
+Route::get('analytics/nhv/{id?}', 'AnalyticsNhV@index')->name('analytic_nv');
+Route::get('analytics/total', 'TotalAnalytics@index')->middleware('checkPer')->name('analytic_total');
+Route::get('statics/teamab', 'TeamAb@index')->name('teamAb');
 });
 
 //ConfigInfo
 Route::post('store/info', 'ConfigInfoController@store')->name('store_info');
 Route::post('edit/info', 'ConfigInfoController@edit')->name('edit_info');
 Route::post('delete/info', 'ConfigInfoController@destroy')->name('delete_info');
+Route::post('edit/pass', 'ConfigInfoController@editPass')->name('edit_pass');
 //ConfigPage 
 Route::post('store/page', 'ConfigPageController@store')->name('store_page');
 Route::post('edit/page', 'ConfigPageController@edit')->name('edit_page');
@@ -47,6 +49,15 @@ Route::post('delete/page', 'ConfigPageController@destroy')->name('delete_page');
 Route::get('setup/total','TotalAnalytics@setupTotal')->name('setup_total');
 Route::post('setup/total/user','TotalAnalytics@setupUser')->name('setup_user');
 Route::post('setup/total/page','TotalAnalytics@setupPage')->name('setup_page');
-////Test
+///
+Route::post('teamab/save','TeamAb@store')->name('add_page');
+Route::post('teamab/delete','TeamAb@destroy')->name('delete_pageAB');
+
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    return "Cache is cleared";
+})->name('clear_cache');
+//Test
 Route::post('/test','Test@upPhoto')->name('testPost');
 

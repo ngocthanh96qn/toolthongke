@@ -45,8 +45,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(ConfigPage::class);
     }
-    public function roles()
-    {
-        return $this->hasMany(Role::class);
-    }
+   
 }

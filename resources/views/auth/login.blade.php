@@ -32,7 +32,7 @@
     <![endif]-->
 
 </head>
-<body class="hold-transition login-page" style="background-image: url('{{ asset('image/cover.jpg') }}');">
+<body class="hold-transition login-page" style="background-image: linear-gradient(to right, #577590 , #D78A76);">
 <div class="login-box">
     <div class="login-logo">
         <a href="{{ url('/home') }}"><b style="color: #FFFF00">MediaNet </b>Team IA</a>
