@@ -36,6 +36,7 @@
 <!-- Skin css-->
 <link href="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/skins/skins-modes/color1.css"  id="theme" rel="stylesheet" type="text/css" media="all" />
 <link href="{{ asset('css/style_1.css') }}" rel="stylesheet"/>
+<link href="{{ asset('css/style.css') }}" rel="stylesheet"/>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 </head>
 
@@ -76,7 +77,7 @@
 								<div class="card-header">
 									<div class="card-title">Tổng View toàn hệ thống của ViewID -- {{$value['view_id']}}</div>
 								</div>
-								<div class="card-body" >
+								<div class="card-body" style="height: 197px">
                                      <canvas id="myChart{{$value['view_id']}}"></canvas>
                                 </div>
 							</div>
@@ -86,7 +87,7 @@
 								
 								<div class="row mr-0 ml-0">
 									<div class="col-md-12 pr-0 pl-0">
-										<div class="card-body">
+										<div class="card-body" style="height: 126px">
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2">View ngày hôm qua</h6>
@@ -101,7 +102,7 @@
                                                     }
                                                     
                                                     $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với ngày hôm trước</p>');
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với ngày hôm trước</p>');
                                                 }
                                                 else {
                                                     if ($value['data'][count($value['data'])-3]==0) {
@@ -121,7 +122,7 @@
 										</div>
 									</div>
 									<div class="col-md-12 pr-0 pl-0 border-top">
-										<div class="card-body">
+										<div class="card-body" style="height: 126px">
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2">View Tháng này</h6>
@@ -130,18 +131,18 @@
 												@php
                                                 if($data['totalViewId'][$value['view_id']]['viewThisMonth'] > $data['totalViewId'][$value['view_id']]['viewBeforeMonth']){
                                                     if ($data['totalViewId'][$value['view_id']]['viewBeforeMonth']==0) {
-                                                        $x=0;
+                                                        $x=100;
                                                     }
                                                     else {
                                                        $x = (($data['totalViewId'][$value['view_id']]['viewThisMonth'] - $data['totalViewId'][$value['view_id']]['viewBeforeMonth'])/$data['totalViewId'][$value['view_id']]['viewBeforeMonth'])*100; 
                                                     }
                                                     
                                                     $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với tháng trước</p>');
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với tháng trước</p>');
                                                 }
                                                 else {
                                                     if ($data['totalViewId'][$value['view_id']]['viewBeforeMonth']==0) {
-                                                       $x=0;
+                                                       $x=100;
                                                     }
                                                     else {
                                                        $x = (($data['totalViewId'][$value['view_id']]['viewBeforeMonth'] - $data['totalViewId'][$value['view_id']]['viewThisMonth'])/$data['totalViewId'][$value['view_id']]['viewBeforeMonth'])*100; 
@@ -228,7 +229,7 @@
 								<div class="row mr-0 ml-0">
 									@foreach ($data['rankNvYesterday'] as $nv => $view)
 										<div class="col-md-12 pr-0 pl-0">
-										<div class="card-body">
+										<div class="card-body" style="height: 123px;">
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2"><a href="{{ route('menu.analytic_nv',$data['statisNv'][$nv]['id']) }}">{{$nv}}</a></h6>
@@ -259,18 +260,18 @@
 													@php
                                                 if( $view > $data['statisNv'][$nv]['view_nv_beforeMonth'] ){
                                                     if ($data['statisNv'][$nv]['view_nv_beforeMonth']==0) {
-                                                        $x=0;
+                                                        $x=100;
                                                     }
                                                     else {
                                                        $x = (($view - $data['statisNv'][$nv]['view_nv_beforeMonth'])/$data['statisNv'][$nv]['view_nv_beforeMonth'])*100; 
                                                     }
                                                     
                                                     $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với tháng trước</p>');
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với tháng trước</p>');
                                                 }
                                                 else {
                                                     if ($data['statisNv'][$nv]['view_nv_beforeMonth']==0) {
-                                                        $x=0;
+                                                        $x=100;
                                                     }
                                                     else {
                                                        $x = (($data['statisNv'][$nv]['view_nv_beforeMonth']-$view)/$data['statisNv'][$nv]['view_nv_beforeMonth'])*100; 
@@ -281,8 +282,22 @@
                                                 }
                                             @endphp
 												</div>
-											<div class="chart-circle chart-circle-md" data-value="{{($data['statisNv'][$nv]['view_nv_month']/($data['statisNv'][$nv]['view_nv_beforeMonth']*0.2+$data['statisNv'][$nv]['view_nv_beforeMonth']))}}" data-thickness="10" data-color="#f7b731">
-														<div class="chart-circle-value text-center "><h6 class="mb-0">{{number_format(($data['statisNv'][$nv]['view_nv_month']/($data['statisNv'][$nv]['view_nv_beforeMonth']*0.2+$data['statisNv'][$nv]['view_nv_beforeMonth']))*100,'1','.','.')}}</h6></div>
+											<div class="chart-circle chart-circle-md" data-value="
+											@if ($data['statisNv'][$nv]['view_nv_beforeMonth']!==0)
+												{{($data['statisNv'][$nv]['view_nv_month']/($data['statisNv'][$nv]['view_nv_beforeMonth']*0.2+$data['statisNv'][$nv]['view_nv_beforeMonth']))}}
+											@else
+											    {{100}}
+											@endif
+											" 
+											data-thickness="10" data-color="#f7b731">
+														<div class="chart-circle-value text-center ">
+											<h6 class="mb-0">
+											@if ($data['statisNv'][$nv]['view_nv_beforeMonth']!==0)
+												{{number_format(($data['statisNv'][$nv]['view_nv_month']/($data['statisNv'][$nv]['view_nv_beforeMonth']*0.2+$data['statisNv'][$nv]['view_nv_beforeMonth']))*100,'1','.','.')}}
+											@else
+												{{100}}
+											@endif
+											</h6></div>
 											</div>
 										</div>
 
@@ -298,7 +313,7 @@
 								<div class="card-header">
 									<div class="card-title">Top view các Trang hôm qua</div>
 								</div>
-								<div class="card-body">
+								<div class="card-body" style="height: 1107px; overflow-y: scroll;">
 									@php
 										$k=100;
 									@endphp
@@ -323,7 +338,7 @@
 								<div class="card-header">
 									<div class="card-title">Top view các Trang Tháng này</div>
 								</div>
-								<div class="card-body">
+								<div class="card-body" style="height: 1107px; overflow-y: scroll;">
 									@php
 										$ki=0;
 										$k=100;
@@ -344,6 +359,9 @@
 								</div>
 							</div>
 						</div>
+
+						
+
 					</div>
 					<!-- ROW-1 CLOSED -->
 
@@ -479,7 +497,7 @@ var color =  ['#f7b731','#564ec1','#04cad0','#f5334f','#26c2f7','#fc5296','#007e
 for (var i = 0; i < data.length; i++) {
 	var ctx = document.getElementById("myChart"+data[i]['view_id']).getContext('2d');
 	var myChart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: data[i]['day'],
         datasets: [{
@@ -488,32 +506,58 @@ for (var i = 0; i < data.length; i++) {
             fill: false,
             borderColor: color[i], // Add custom color border (Line)
             backgroundColor: color[i], // Add custom color background (Points and Fill)
-            borderWidth: 3 // Specify bar border width
+            borderWidth: 1, // Specify bar border width
+            
+
         }]},
             options: {
-          responsive: true, // Instruct chart js to respond nicely.
-          maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
-          elements: {
-            line: {
-                tension: 0 // disables bezier curves
-            }
-          },
-          label: {
+          		responsive: true, // Instruct chart js to respond nicely.
+          		maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+		          elements: {
+		            line: {
+		                tension: 0 // disables bezier curves
+		            }
+          		},
+	          label: {
+	            display: false,
+	            text: 'Biểu đồ View Theo Ngày'
+	           },
+           	title: {
             display: false,
             text: 'Biểu đồ View Theo Ngày'
-        },
-           title: {
-            display: false,
-            text: 'Biểu đồ View Theo Ngày'
-        },
-        scales: {
-          xAxes: [{
-            display: false
-          }],
-          yAxes: [{
-            display: true
-          }],
-        }
+    		},
+    		callbacks: { 
+               label: function(tooltipItem, data) { 
+                   return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }, 
+               },
+            legend: { 
+             display: false 
+            }, 
+	        tooltips: { 
+	           mode: 'label', 
+	           label: 'mylabel', 
+	           callbacks: { 
+	               label: function(tooltipItem, data) { 
+	                   return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }, }, 
+	        }, 
+	        scales: {
+	          xAxes: [{
+	            display: false
+	          }],
+	          yAxes: [{
+	            display: true,
+	           ticks: {
+	                    callback: function(label, index, labels) {
+	                        return label/1000+'k';
+	                    }
+	                },
+
+	                scaleLabel: {
+	                    display: false,
+	                    labelString: '1k = 1000'
+	                },
+	          }],
+	        }
         }
 });
 }

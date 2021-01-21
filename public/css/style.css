@@ -113,3 +113,15 @@ input[type="file"] {
 .bg-cus {
   background-image: linear-gradient(to right, #577590 , #D78A76);
 }
+
+.textcomplete{
+    display:none;
+}
+ 
+.textmore{
+    background:lightblue;
+    color:navy;
+    font-size:13px;
+    padding:3px;
+    cursor:pointer;
+}

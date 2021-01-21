@@ -58,6 +58,10 @@ Route::get('/clear-cache', function() {
     Artisan::call('view:clear');
     return "Cache is cleared";
 })->name('clear_cache');
+
+Route::get('/schedule', function() {
+    Artisan::call('minute:update');   
+});
 //Test
-Route::post('/test','Test@upPhoto')->name('testPost');
+Route::get('/test','AnalyticsNhV@runSchedule')->name('testPost');
 

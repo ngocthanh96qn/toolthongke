@@ -23,6 +23,7 @@ class AnalyticsNhV extends Controller
         }
         else {
             $pages = ConfigPage::where('user_id','=',$id)->get()->toArray();
+            if($pages==null){ return false;}
             $nameUser = User::find($id)->name;
            
         }
@@ -48,7 +49,9 @@ class AnalyticsNhV extends Controller
     		$bieu_do[$index][1][]=$day['view'];
     		$bieu_do[$index][3]=$name;
     	}
-    $index++;	
+       
+    $index++;
+
     }
     $data['view_yesterday'] =$view_yesterday;
     $data['view_BeforeYesterday'] =$view_BeforeYesterday;
@@ -75,11 +78,12 @@ class AnalyticsNhV extends Controller
 			$day = Period::create($startDate, $endDate);
 		    $response = Analytics::performQuery($day,'ga:sessions',['dimensions'=>'ga:source,ga:medium','filters'=>'ga:medium=='.$page['utm_medium']]);
 		    $view_page[$page['name_page']][$key]['day'] = $days;
+            $view_page[$page['name_page']][$key]['view'] = 0;
 		    if ($response->rows !== null) {
 		    	foreach ($response->rows as $abc => $value) {
 		    		if ( $value[0] == $page['utm_source']) {
 		    			$view_page[$page['name_page']][$key]['view'] = $value[2];
-		    		}		    		
+		    		}  		    		
 		    	}
 		    } else {$view_page[$page['name_page']][$key]['view'] = 0;}
 	    }
@@ -132,6 +136,7 @@ class AnalyticsNhV extends Controller
     	$firstMonth = Carbon::create($firstMonth); 
     	$days = Period::create($firstMonth, $endMonth);
 		    $response = Analytics::performQuery($days,'ga:sessions',['dimensions'=>'ga:source,ga:medium','filters'=>'ga:medium=='.$page['utm_medium']]);
+            $view_page[$page['name_page']]['viewBeforeMonth'] =0;
 		    if ($response->rows !== null) {
 		    	foreach ($response->rows as $abc => $value) {
 		    		if ( $value[0] == $page['utm_source']) {
@@ -143,5 +148,14 @@ class AnalyticsNhV extends Controller
     }
     return $view_page;
 
+    }
+    public function runSchedule(){
+        $users = User::all()->toArray();
+         
+        foreach ($users as $key11 => $user) {
+            
+           $viewSh = $this->index($user['id']);
+        }
+        
     }
 }

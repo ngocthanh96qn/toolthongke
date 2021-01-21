@@ -14,7 +14,7 @@
 <!-- TITLE -->
 <title>Thống kê nhân viên</title>
 <!-- DASHBOARD CSS -->
-<link href="{{ asset('css/style_1.css') }}" rel="stylesheet"/>
+<link href="{{ asset('/css/style_1.css?v=').time()}}" rel="stylesheet"/>
 
 <!-- LEFT-MENU CSS -->
 <link href="https://laravel.spruko.com/solic/Leftmenu-Icon-Light-Sidebar-ltr/assets/plugins/sidemenu-toggle/sidemenu-toggle.css" rel="stylesheet">
@@ -71,13 +71,13 @@
                                     <div class="card overflow-hidden">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-7 col-md-6">
+                                                <div class="col-8 col-md-8">
                                                     <h2 class="mb-1 number-font display-4 font-weight-bold text-dark">{{number_format($data['view_yesterday'],"0",".",".")}}</h2>
                                                     @php
                                                         if($data['view_yesterday'] > $data['view_BeforeYesterday']){
                                                             $x = (($data['view_yesterday'] - $data['view_BeforeYesterday'])/$data['view_BeforeYesterday'])*100;
                                                             $x=number_format($x,"2",".",".");
-                                                            echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với ngày hôm trước</p>');
+                                                            echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với ngày hôm trước</p>');
                                                         }
                                                         else {
                                                             $x = (($data['view_BeforeYesterday'] - $data['view_yesterday'])/$data['view_BeforeYesterday'])*100;
@@ -87,7 +87,7 @@
                                                     @endphp
                                                     
                                                 </div>
-                                                <div class="col-5 col-md-6">
+                                                <div class="col-4 col-md-4">
                                                     <h6 class="mb-0">Hôm qua</h6>
                                                     <div class="chart-wrapper chart-back">
                                                         <canvas id="bouncerate" class=""></canvas>
@@ -102,7 +102,7 @@
                                     <div class="card overflow-hidden">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-7 col-md-6">
+                                                <div class="col-8 col-md-8">
                                                     <h2 class="mb-1 number-font display-4 font-weight-bold text-dark">{{number_format($data['view_thisMonth'],"0",".",".")}}</h2>
                                                     @php
                                                     $viewBeforeMonth= 0;
@@ -110,19 +110,31 @@
                                                         $viewBeforeMonth += $page['viewBeforeMonth'];
                                                     }
                                                         if($data['view_thisMonth'] > $viewBeforeMonth){
-                                                            $x = (($data['view_thisMonth'] - $viewBeforeMonth)/$viewBeforeMonth)*100;
+                                                            if ($viewBeforeMonth!==0) {
+                                                               $x = (($data['view_thisMonth'] - $viewBeforeMonth)/$viewBeforeMonth)*100;
                                                             $x=number_format($x,"2",".",".");
-                                                            echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với tháng trước</p>');
+                                                            }
+                                                            else {
+                                                                $x=100;
+                                                            }
+                                                            
+                                                            echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với tháng trước</p>');
                                                         }
                                                         else {
-                                                            $x = (($viewBeforeMonth - $data['view_thisMonth'])/$viewBeforeMonth)*100;
+                                                            if ($viewBeforeMonth!==0) {
+                                                               $x = (($viewBeforeMonth - $data['view_thisMonth'])/$viewBeforeMonth)*100;
                                                             $x=number_format($x,"2",".",".");
+                                                            }
+                                                            else {
+                                                                $x=100;
+                                                            }
+                                                            
                                                            echo ('<p class="mb-0 text-muted"><span class="mb-0 text-danger fs-13 "><i class="fa fa-long-arrow-down"></i> '.$x.'%</span> so với tháng trước</p>'); 
                                                         }
                                                     @endphp
                                                     
                                                 </div>
-                                                <div class="col-5 col-md-6">
+                                                <div class="col-4 col-md-4">
                                                     <h6 class="mb-0">Tháng này</h6>
                                                     <div class="chart-wrapper chart-back">
                                                         <canvas id="sessions" class=""></canvas>
@@ -133,15 +145,15 @@
                                     </div>
                                 </div>
                                 @php
-                                    $colorTheme = ['bg-warning','bg-primary','bg-secondary','bg-danger','bg-info','bg-pink', 'bg-cyan','bg-purple' ];
+                                    $colorTheme = ['bg-warning','bg-primary','bg-secondary','bg-danger','bg-info','bg-pink', 'bg-cyan','bg-purple','bg-warning','bg-primary','bg-secondary','bg-danger','bg-info','bg-pink', 'bg-cyan','bg-purple' ];
                                     $ki=0;
                                 @endphp
                                     
                                 <div class="col-sm-12 col-lg-12 col-xl-12">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h3 class="mb-1">THỐNG KÊ TỔNG VIEW THÁNG NÀY</h3>
-                                            <p class="text-muted mb-5">Phần trăm view từng page</p>
+                                            <h3 class="mb-1">CHI TIẾT TỔNG VIEW THÁNG NÀY</h3>
+                                            <p class="text-muted mb-5">Phần trăm view từng page so với tổng view của tháng</p>
                                             <div class="row mt-4">
                                                 @foreach ($data['view_page_thisMonth'] as $name => $page)
                                                 
@@ -174,7 +186,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-lg-12 col-xl-4">
+                        {{-- <div class="col-sm-12 col-lg-12 col-xl-4">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-title">CHI TIẾT VIEW TỪNG PAGE HÔM QUA</div>
@@ -204,18 +216,53 @@
                                     
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- ROW-1 CLOSED -->
-
-                    <!-- ROW  -->
-                    <div class="row">
-                        <div class="col-xl-6 col-md-12 col-lg-6">
+                        </div> --}}
+                        <div class="col-xl-4 col-md-12 col-lg-4">
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">CHỈ TIÊU ĐẠT ĐƯỢC THÁNG NÀY</h3>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body" style="line-height: 87px;">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <span class=" mb-1">TỔNG VIEW ĐẠT ĐƯỢC THÁNG NÀY</span>
+                                            <h2 class="mb-3">{{number_format($data['view_thisMonth'],"0",".",".")}} <span class="fs-13 text-muted font-weight-normal">lượt view</span></h2>
+                                            <p class="mb-0 text-muted">Chỉ tiêu được tính dựa trên số view của tháng này so với view tháng trước * 20%</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="chart-circle overflow-hiddene  mt-sm-0 mb-0 text-left" data-value="
+                                            @if ($viewBeforeMonth!==0)
+                                                 {{number_format($data['view_thisMonth']/($viewBeforeMonth*0.2+$viewBeforeMonth),"2",".",".")}}
+                                            @else
+                                                {{100}}
+                                            @endif
+                                           " data-thickness="8" data-color="#21c44c">
+                                                <div class="chart-circle-value text-center "><h3 class="mb-0">
+                                                @if ($viewBeforeMonth!==0)
+                                                 {{number_format(($data['view_thisMonth']/($viewBeforeMonth*0.2+$viewBeforeMonth))*100,"0",".",".")}}
+                                            @else
+                                                {{100}}
+                                            @endif
+                                        %</h3><small class="fs-11">chỉ tiêu</small></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                    <!-- ROW-1 CLOSED -->
+
+                    <!-- ROW  -->
+                    <div class="row ">
+                        <hr>
+                        <br>
+                       {{--  <div class="col-xl-4 col-md-12 col-lg-4 offset-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">CHỈ TIÊU ĐẠT ĐƯỢC THÁNG NÀY</h3>
+                                </div>
+                                <div class="card-body" style="line-height: 1.5rem;">
                                     <div class="row">
                                         <div class="col-md-8">
                                             <span class=" mb-1">TỔNG VIEW ĐẠT ĐƯỢC THÁNG NÀY</span>
@@ -230,8 +277,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-6 col-md-12 col-lg-6">
+                        </div> --}}
+                        {{-- <div class="col-xl-6 col-md-12 col-lg-6">
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">CẦN CỐ GẮNG</h3>
@@ -251,7 +298,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- ROW CLOSED -->
 
@@ -268,14 +315,14 @@
                                 <div class="card-header">
                                     <div class="card-title">Biểu đồ chi tiết view theo ngày của {{$name}}</div>
                                 </div>
-                                <div class="card-body" >
+                                <div class="card-body" style="height: 214px !important;" >
                                      <canvas id="myChart{{$name}}"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-12 col-xl-4">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="padding: 0.5rem 1.5rem; line-height: 2.5rem !important;">
                                     <div class="d-flex">
                                         <div class="">
                                             <h6>Hôm qua </h6>
@@ -290,7 +337,7 @@
                                                     }
                                                     
                                                     $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với ngày hôm trước</p>');
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với ngày hôm trước</p>');
                                                 }
                                                 else {
                                                     if ($page['view_BeforeYesterday']==0) {
@@ -318,7 +365,7 @@
                                
                             </div>
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="padding: 0.5rem 1.5rem; line-height: 2.5rem !important;">
                                     <div class="d-flex">
                                         <div class="">
                                             <h6>Tháng này</h6>
@@ -326,18 +373,18 @@
                                              @php
                                                 if($data['view_page_thisMonth'][$name]['view_thisMonth'] > $data['view_beforeMonth'][$name]['viewBeforeMonth']){
                                                     if ($data['view_beforeMonth'][$name]['viewBeforeMonth']==0) {
-                                                        $x=0;
+                                                        $x=100;
                                                     } else {
                                                        $x = (($data['view_page_thisMonth'][$name]['view_thisMonth'] - $data['view_beforeMonth'][$name]['viewBeforeMonth'])/$data['view_beforeMonth'][$name]['viewBeforeMonth'])*100;
                                                     }
                                                     
                                                     
                                                     $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i>'.$x.'%</span> so với tháng trước</p>');
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với tháng trước</p>');
                                                 }
                                                 else {
                                                     if ($data['view_beforeMonth'][$name]['viewBeforeMonth']==0) {
-                                                        $x=0;
+                                                        $x=100;
                                                     } else {
                                                        $x = (($data['view_beforeMonth'][$name]['viewBeforeMonth'] - $data['view_page_thisMonth'][$name]['view_thisMonth'])/$data['view_beforeMonth'][$name]['viewBeforeMonth'])*100;
                                                     }

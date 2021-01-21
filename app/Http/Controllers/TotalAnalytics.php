@@ -16,10 +16,16 @@ use DB;
 class TotalAnalytics extends Controller
 {
     public function index(){
+        
+
         $statisNv = $this->statisNv(); //view nhân viên hôm qua tháng này tháng trước
+
         $statisPage = $this->statisPage(); //view page hôm qua tháng này
+        // dd($statisPage);
     	$month = $this->getDayOfMonth(); //lấy ngày trong tháng
-    	$viewDay = $this->viewDay($month); //ngày và view từng ngày của tháng 
+        // dd($month);
+    	$viewDay = $this->viewDay($month); //ngày và view từng ngày của tháng
+        // dd($viewDay); 
     	$totalViewId = $this->totalViewId(); //view từng view ID view tháng này, view tháng trước
         //code sắp xếp rankNv
         foreach ($statisNv as $key => $value) {
@@ -109,6 +115,7 @@ class TotalAnalytics extends Controller
         $firstMonth = Carbon::create($firstMonth); 
         $day = Period::create($firstMonth, $endMonth);
         $response = Analytics::performQuery($day,'ga:sessions',['filters'=>'ga:source=='.$info['source']]);//tong view
+
         return $response->rows;
     }
 ///////////////////////////////// Thống kê page
@@ -193,6 +200,7 @@ class TotalAnalytics extends Controller
            Analytics::setViewId($view_id);
             // $totalViewId[$view_id]['viewYesterday'] =  $this->viewYesterday();
             $totalViewId[$view_id]['viewThisMonth'] =  $this->viewThisMonth();
+
             $totalViewId[$view_id]['viewBeforeMonth'] =  $this->viewBeforeMonth();
        }
       return $totalViewId;
@@ -211,7 +219,13 @@ class TotalAnalytics extends Controller
     	$today = Carbon::today();
     	$day = Period::create($firstMonth, $today);
     	$response = Analytics::performQuery($day,'ga:sessions');
-    	return $response->rows[0][0];
+    	if ($response->rows==null) {
+            $view = 0;
+        }
+        else {
+            $view = $response->rows[0][0];
+        }
+        return  $view;
     }
     public function viewBeforeMonth(){
     	
@@ -222,7 +236,13 @@ class TotalAnalytics extends Controller
     	$firstMonth = Carbon::create($firstMonth); 
     	$day = Period::create($firstMonth, $endMonth);
     	$response = Analytics::performQuery($day,'ga:sessions');
-    	return $response->rows[0][0];
+        if ($response->rows==null) {
+            $view = 0;
+        }
+        else {
+            $view = $response->rows[0][0];
+        }
+    	return  $view;
     }
     public function viewDay($month){
         $view_id = DB::table('config_pages')->select('view_id')->get()->toArray();

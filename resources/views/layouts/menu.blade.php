@@ -45,15 +45,15 @@
     <li class="active">
       <a href="{{ route('menu.analytic_total') }}">
         <i class="fa fa-line-chart"></i>
-        <span>XEM THỐNG KÊ TEAM IA </span>
+        <span> XEM THỐNG KÊ TEAM IA </span>
       </a>
     </li>
-    <li class="active">
+    {{-- <li class="active">
       <a href="{{ route('menu.teamAb') }}">
         <i class="fa fa-line-chart"></i>
         <span>XEM THỐNG KÊ TEAM AB </span>
       </a>
-    </li>
+    </li> --}}
     <li class="active">
       <a href="{{ route('clear_cache') }}">
         <i class="fa fa-trash-o"></i>
