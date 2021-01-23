@@ -49,6 +49,7 @@ Route::post('delete/page', 'ConfigPageController@destroy')->name('delete_page');
 Route::get('setup/total','TotalAnalytics@setupTotal')->name('setup_total');
 Route::post('setup/total/user','TotalAnalytics@setupUser')->name('setup_user');
 Route::post('setup/total/page','TotalAnalytics@setupPage')->name('setup_page');
+Route::post('setup/total/day','TotalAnalytics@setDay')->name('setDay');
 ///
 Route::post('teamab/save','TeamAb@store')->name('add_page');
 Route::post('teamab/delete','TeamAb@destroy')->name('delete_pageAB');

@@ -16,8 +16,7 @@ use DB;
 class TotalAnalytics extends Controller
 {
     public function index(){
-        
-
+                
         $statisNv = $this->statisNv(); //view nhân viên hôm qua tháng này tháng trước
 
         $statisPage = $this->statisPage(); //view page hôm qua tháng này
@@ -51,6 +50,7 @@ class TotalAnalytics extends Controller
         // dd($data);
     	return view('pages.pageTotal',['data'=>$data]);
     }
+    /////////////////////////////////
     public function statisNv(){
     	$users = User::where('check','=','checked')->get();
 
@@ -262,8 +262,7 @@ class TotalAnalytics extends Controller
                 $endDate = $days;
                 $day = Period::create($startDate, $endDate);
                 $response = Analytics::performQuery($day,'ga:sessions');
-                $data_month[$keyid]['day'][] =$dayi;
-
+                $data_month[$keyid]['day'][] =$days->format('d-m-Y');
                 if (isset($response->rows[0][0])) {
                     $data_month[$keyid]['data'][] =$response->rows[0][0];
                 } else {
@@ -281,6 +280,10 @@ class TotalAnalytics extends Controller
     }
     public function getDayOfMonth(){
      	$dayOfMonth = Carbon::today()->day;
+        if ( $dayOfMonth < 7) {
+           $dayOfMonth = 7;
+        }
+        
     			for ($i=0; $i < $dayOfMonth ; $i++) { 
                     $date = new DateTime($i.'days ago');
                     $date = $date->format('Y-m-d');
@@ -288,4 +291,49 @@ class TotalAnalytics extends Controller
                 }
                 return $week;            
      }
+
+    public function setDay(Request $Request){
+        $dt1 = Carbon::create($Request->startDay);
+        $dt2 = Carbon::create($Request->endDay);
+        $interval = $dt1->diff($dt2);
+        // $date = $dt2->subDays(30);
+        // $date = $date->format('Y-m-d');
+        // dd($date);
+        $customer=[];
+        for ($i=0; $i <= $interval->days ; $i++) {
+                    $dt2 = Carbon::create($Request->endDay);
+                    $date = $dt2->subDays($i); 
+                    $date = $date->format('Y-m-d');
+                    $customer[] = $date;
+         }
+
+        $statisNv = $this->statisNv(); //view nhân viên hôm qua tháng này tháng trước
+        $statisPage = $this->statisPage(); //view page hôm qua tháng này
+        $viewDay = $this->viewDay($customer); //ngày và view từng ngày của tháng
+        $totalViewId = $this->totalViewId(); //view từng view ID view tháng này, view tháng trước
+        //code sắp xếp rankNv
+        foreach ($statisNv as $key => $value) {
+            $rankNv[$key] = $value['view_nv_month'];
+        }
+        arsort($rankNv);
+        foreach ($statisNv as $key => $value) {
+            $rankNvYesterday[$key] = $value['view_nv_yesterday'];
+        }
+        arsort($rankNvYesterday);
+        ///
+        //code sắp xếp rankPage
+        foreach ($statisPage as $key => $value) {
+            $rankPage[$key] = $value['thisMonth'];
+        }
+        arsort($rankPage);
+        foreach ($statisPage as $key => $value) {
+            $rankPageYesterday[$key] = $value['yesterday'];
+        }
+        arsort($rankPageYesterday);
+        ///
+        $data=['statisNv'=>$statisNv,'statisPage'=>$statisPage,'viewDay'=>$viewDay,'viewDay'=>$viewDay,'totalViewId'=>$totalViewId,'rankNv'=>$rankNv,'rankPage'=>$rankPage,'rankNvYesterday'=>$rankNvYesterday,'rankPageYesterday'=>$rankPageYesterday];
+        // dd($data);
+        return view('pages.pageTotal',['data'=>$data]);   
+    }
+
 }

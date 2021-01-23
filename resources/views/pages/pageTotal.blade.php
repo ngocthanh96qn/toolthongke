@@ -5,8 +5,8 @@
 		<!-- Meta data -->
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		<meta content="Solic – Bootstrap Responsive Modern Simple Dashboard Clean HTML Premium Admin Template" name="description">
-		<meta content="Spruko Technologies Private Limited" name="author">
+		<meta content="" name="description">
+		<meta content="" name="author">
 		<meta name="keywords" content=""   />
 		<!--favicon -->
 <link rel="icon" href="{{ asset('image/icon.gif') }}" type="image/x-icon"/>
@@ -16,10 +16,6 @@
 <!-- DASHBOARD CSS -->
 <link href="{{ asset('solic/css/dashboard.css') }}" rel="stylesheet"/>
 <link href="{{ asset('solic/css/dashboard-dark.css') }}" rel="stylesheet"/>
-{{-- <link href="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/css/style-modes.css" rel="stylesheet"/> --}}
-{{-- <!-- HORIZONTAL-MENU CSS -->
-<link href="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/horizontal-menu/dropdown-effects/fade-down.css" rel="stylesheet"> --}}
-{{-- <link href="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/horizontal-menu/horizontal-menu.css" rel="stylesheet"> --}}
 <!--C3.JS CHARTS PLUGIN -->
 <link href="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/charts-c3/c3-chart.css" rel="stylesheet"/>
 <!-- TABS CSS -->
@@ -70,13 +66,71 @@
                         </ol>  
                     </div>
 					<!-- ROW-2 OPEN -->
+{{-- 					<div class="row">
+						
+						<div class="col-xl-9 col-md-12 col-lg-12">
+						<form action="{{ route('setDay') }}" method="POST" autocomplete="off">
+						@csrf
+						<div class="card">
+								<div class="card-header">
+									<div class="card-title">Thống kê theo thời gian tự chọn</div>
+								</div>
+								<div class="row">
+									<div class="col-xl-6 col-md-6 col-lg-6">
+										<div class="card-body">
+										<div class="wd-200 mg-b-30">
+											<div class="input-group" >
+												<div class="input-group-prepend" >
+													<div class="input-group-text" >
+														<i class="fa fa-calendar tx-16 lh-0 op-6" ></i>
+													</div>
+												</div>
+												<input class="form-control fc-datepicker" placeholder="Bắt đầu" type="text" name="startDay" >
+											
+												<input class="form-control fc-datepicker" placeholder="Kết thúc" type="text" name="endDay">
+											</div>
+										</div>
+										</div>
+									</div>
+									
+									<div class="col-xl-4 col-md-6 col-lg-6">
+										<div class="card-body">
+										<button type="submit"  class="btn btn-pill btn-warning">XEM</button>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							</form>
+						</div>
+						
+						
+					</div> --}}
+					
 					@foreach ($data['viewDay'] as $key=>$value)
 						<div class="row" style="margin-top: 30px;">
 						<div class="col-xl-9 col-md-12 col-lg-12">
 							<div class="card">
 								<div class="card-header">
-									<div class="card-title">Tổng View toàn hệ thống của ViewID -- {{$value['view_id']}}</div>
+									<h3 class="card-title">Tổng View toàn hệ thống của ViewID -- {{$value['view_id']}}</h3>
+									<div class="card-options">
+										<form action="{{ route('setDay') }}" method="POST" autocomplete="off">
+										@csrf
+											<div class="input-group">
+												
+												<input class="form-control form-control-sm fc-datepicker" placeholder="Bắt đầu" type="text" name="startDay" value="{{$value['day']['0']}}">
+											
+												<input class="form-control form-control-sm fc-datepicker" placeholder="Kết thúc" type="text" name="endDay" value="{{end($value['day'])}}">
+												<span class="input-group-btn ml-0">
+													<button class="btn-default" style=" border-radius: 5px;" type="submit">
+														<i class="fa fa-refresh" aria-hidden="true"></i>
+													</button>
+												</span>
+											</div>
+										</form>
+									</div>
 								</div>
+								
 								<div class="card-body" style="height: 197px">
                                      <canvas id="myChart{{$value['view_id']}}"></canvas>
                                 </div>
@@ -172,55 +226,7 @@
                         @endphp
 					<!-- ROW-1 OPEN -->
 					<div class="row" style="margin-top: 30px;" >
-						{{-- <div class="col-xl-9 col-md-12 col-lg-12">
-							<div class="row">
-								
-									<div class="col-xl-9 col-md-12 col-lg-12">
-									<div class="card">
-										<div class="card-header">
-											<div class="card-title">Thống kê nhân viên</div>
-										</div>	
-								   </div>
-							   </div>
-								</div>
-								<div class="row">
-									
-									@foreach ($data['statisNv'] as $name=>$nv)
-									<div class="col-sm-6 col-lg-6 col-xl-6">
-									<div class="card overflow-hidden">
-										<div class="card-body pb-0">
-											<div class="text-center mb-5">
-												<h6 class="mb-2">{{$name}}</h6>
-												<div class="chart-circle chart-circle-md" data-value="{{($nv['view_nv_month']/($nv['view_nv_beforeMonth']*0.2+$nv['view_nv_beforeMonth']))}}" data-thickness="10" data-color="{{$color[$ki]}}">
-														<div class="chart-circle-value text-center "><h6 class="mb-0">{{number_format(($nv['view_nv_month']/($nv['view_nv_beforeMonth']*0.2+$nv['view_nv_beforeMonth']))*100,'2','.','.')}}</h6></div>
-												</div>
-											</div>
-											<div class="row mb-5">
-												<div class="col-6 text-center border-right">
-													<p class="mb-1 text-muted">Hôm qua</p>
-													<h5 class="mb-0">{{number_format($nv['view_nv_yesterday'],'0','.','.')}}</h5>
-												</div>
-												<div class="col-6 text-center">
-													<p class="mb-1 text-muted">Tháng này</p>
-													<h5 class="mb-0">{{number_format($nv['view_nv_month'],'0','.','.')}}</h5>
-												</div>
-												<div class="card-body text-center">
-												<a href="{{ route('menu.analytic_nv',$nv['id']) }}" class="btn  btn-sm" style="background:{{$color[$ki]}};color: white ">Chi tiết <i class="fa fa-arrow-right"></i></a>
-												</div>
-											</div>
-										</div>
-										
-									</div>
-									</div>
-									@php
-										$ki++;
-									@endphp
-									@endforeach
-								
-								</div>  
-							
-						</div> --}}
-
+						
 						<div class="col-xl-3 col-md-12 col-lg-12">
 							<div class="card">
 								<div class="card-header">
@@ -233,10 +239,8 @@
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2"><a href="{{ route('menu.analytic_nv',$data['statisNv'][$nv]['id']) }}">{{$nv}}</a></h6>
-													<h2 class="mb-0 display-6 font-weight-bold" style="color: #1574fb">{{number_format($view,'0','.','.')}}</h2>
-													
-												</div>
-												
+													<h2 class="mb-0 display-6 font-weight-bold" style="color: #1574fb">{{number_format($view,'0','.','.')}}</h2>	
+												</div>	
 											</div>
 										</div>
 										</div>
@@ -365,77 +369,6 @@
 					</div>
 					<!-- ROW-1 CLOSED -->
 
-					
-
-                    
-
-					<!-- ROW-4 OPEN -->
-					{{-- <div class="row">
-						<div class="col-sm-12 col-lg-12 col-xl-8">
-							<div class="card">
-								<div class="card-header">
-									<div class="card-title">Thống kê các Trang </div>
-								</div>
-								<div class="">
-									<div class="table-responsive">
-										<table class="table card-table table-vcenter mb-0 text-nowrap">
-											<thead>
-												<tr>
-													<th></th>
-													<th>Trang</th>
-													<th>Nhân Viên</th>
-													<th>View Hôm qua</th>
-													
-												</tr>
-											</thead>
-											<tbody>
-												@foreach ($data['statisPage'] as $key => $page)
-													<tr>
-													<td>
-														<img src="{{ asset('image/iconpage.webp') }}" class="avatar brround cover-image max-width-auto" alt="">
-													</td>
-													<td>{{$key}}</td>
-													<td>{{$page['source']}}</td>
-													<td>{{number_format($page['yesterday'],'0','.','.')}}</td>
-													<td><span class="badge badge-success">Xem</span></td>
-												</tr>
-												@endforeach
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-12 col-lg-12 col-xl-4">
-							<div class="card">
-								<div class="card-header">
-									<div class="card-title">Top view các Trang tháng này</div>
-								</div>
-								<div class="card-body">
-									@php
-										$ki=0;
-										$k=100;
-									@endphp
-									@foreach ($data['rankPage'] as $page => $view)
-										<div class="mb-5">
-										<p class="mb-2">{{$page}}<span class="float-right font-weight-semibold">{{number_format($view,'0','.','.')}}</span></p>
-										<div class="progress  progress-xs">
-											<div class="progress-bar  w-{{$k}} " role="progressbar" style="background: {{$color[$ki]}};"></div>
-										</div>
-									</div>
-									@php
-										$k-=10;
-										$ki++;
-									@endphp
-									
-									@endforeach
-								</div>
-							</div>
-						</div>
-					</div> --}}
-					<!-- ROW-4 CLOSED -->
-
-
 				</div>
 				<!-- CONTAINER CLOSED -->
 			</div>
@@ -449,6 +382,13 @@
 <script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/js/vendors/jquery-3.2.1.min.js"></script>
 <!-- BOOTSTRAP SCRIPTS -->
 <script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<!-- TIMEPICKER JS -->
+<script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/time-picker/jquery.timepicker.js"></script>
+<script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/time-picker/toggles.min.js"></script>
+<!-- DATEPICKER JS -->
+<script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/date-picker/spectrum.js"></script>
+<script src="{{ asset('solic/jquery-ui.js') }}"></script>
+<script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/plugins/input-mask/jquery.maskedinput.js"></script>
 <!-- SPARKLINE -->
 <script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/js/vendors/jquery.sparkline.min.js"></script>
 <!-- CHART-CIRCLE -->
@@ -487,7 +427,6 @@
 <script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/js/stiky.js"></script>
 <!-- CUSTOM JS -->
 <script src="https://laravel.spruko.com/solic/Horizontal-Light-ltr/assets/js/custom.js"></script>
-
 <script type="text/javascript">
 ///////////////////////////////////////////////
 var data = {!! json_encode($data['viewDay']) !!};
@@ -561,10 +500,16 @@ for (var i = 0; i < data.length; i++) {
         }
 });
 }
-
-
-
 </script>
-	
+<script>
+	$(function() {
+	$('.fc-datepicker').datepicker({
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		dateFormat: 'dd-mm-yy'
+	});	
+});
+</script>
+
 	</body>
 </html>

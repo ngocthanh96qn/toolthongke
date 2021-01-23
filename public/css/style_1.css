@@ -19451,6 +19451,9 @@ svg {
 .glyphicon-inbox:before {
 	content: "\e028";
 }
+.glyphicon-chevron-right:before {
+	content: "\e029";
+}
 .glyphicon-play-circle:before {
 	content: "\e029";
 }

@@ -24,11 +24,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('cache:clear')->dailyAt('08:09');
-        $schedule->command('view:clear')->dailyAt('08:09');
-        $schedule->call('App\Http\Controllers\TotalAnalytics@index')->dailyAt('08:10');
-        $schedule->call('App\Http\Controllers\AnalyticsNhV@runSchedule')->dailyAt('08:12');
-        $schedule->command('minute:update')->dailyAt('08:20');
+        $schedule->command('cache:clear')->dailyAt('08:40');
+        $schedule->command('view:clear')->dailyAt('08:40');
+        $schedule->call('App\Http\Controllers\TotalAnalytics@index')->dailyAt('08:41');
+        $schedule->call('App\Http\Controllers\AnalyticsNhV@runSchedule')->dailyAt('08:43');
+        $schedule->command('minute:update')->dailyAt('08:50');
     }
 
     /**
