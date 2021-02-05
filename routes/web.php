@@ -34,6 +34,8 @@ Route::get('setup/page', 'ConfigPageController@index')->name('setup_page');
 Route::get('analytics/nhv/{id?}', 'AnalyticsNhV@index')->name('analytic_nv');
 Route::get('analytics/total', 'TotalAnalytics@index')->middleware('checkPer')->name('analytic_total');
 Route::get('statics/teamab', 'TeamAb@index')->name('teamAb');
+Route::get('listview/nv', 'TotalAnalytics@ListView')->name('listviewNv');
+Route::get('check/post', 'TotalAnalytics@CheckPost')->name('CheckPost');
 });
 
 //ConfigInfo
@@ -49,7 +51,8 @@ Route::post('delete/page', 'ConfigPageController@destroy')->name('delete_page');
 Route::get('setup/total','TotalAnalytics@setupTotal')->name('setup_total');
 Route::post('setup/total/user','TotalAnalytics@setupUser')->name('setup_user');
 Route::post('setup/total/page','TotalAnalytics@setupPage')->name('setup_page');
-Route::post('setup/total/day','TotalAnalytics@setDay')->name('setDay');
+Route::post('analytics/total','TotalAnalytics@setDay')->name('setDay');
+Route::post('analyticsnv/total','AnalyticsNhV@setDay')->name('setDayNv');
 ///
 Route::post('teamab/save','TeamAb@store')->name('add_page');
 Route::post('teamab/delete','TeamAb@destroy')->name('delete_pageAB');
@@ -61,8 +64,11 @@ Route::get('/clear-cache', function() {
 })->name('clear_cache');
 
 Route::get('/schedule', function() {
-    Artisan::call('minute:update');   
+    // Artisan::call('minute:update'); 
+    // Artisan::call('name:getDataPost'); 
+    
 });
 //Test
 Route::get('/test','AnalyticsNhV@runSchedule')->name('testPost');
+Route::get('/UpdateData','CronJob@runScheduleTotal'); //câp nhât dư liêu bai viet cho page
 

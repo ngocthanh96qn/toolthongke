@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\EveryMinute',
+
     ];
 
     /**
@@ -24,11 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('cache:clear')->dailyAt('08:40');
-        $schedule->command('view:clear')->dailyAt('08:40');
-        $schedule->call('App\Http\Controllers\TotalAnalytics@index')->dailyAt('08:41');
-        $schedule->call('App\Http\Controllers\AnalyticsNhV@runSchedule')->dailyAt('08:43');
-        $schedule->command('minute:update')->dailyAt('08:50');
+        $schedule->command('cache:clear')->dailyAt('08:01');
+        $schedule->command('view:clear')->dailyAt('08:01');
+        $schedule->call('App\Http\Controllers\TotalAnalytics@index')->dailyAt('08:02');
+        $schedule->call('App\Http\Controllers\AnalyticsNhV@runSchedule')->dailyAt('08:04');
+        // $schedule->command('minute:update')->dailyAt('14:47');
+        
     }
 
     /**

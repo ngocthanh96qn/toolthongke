@@ -10,13 +10,14 @@ use DateTime;
 use App\ConfigPage;
 use App\ConfigInfo;
 use App\User;
+use App\CheckPost;
+use App\CheckDay;
 use Auth;
 use DB;
 
 class TotalAnalytics extends Controller
 {
     public function index(){
-                
         $statisNv = $this->statisNv(); //view nhân viên hôm qua tháng này tháng trước
 
         $statisPage = $this->statisPage(); //view page hôm qua tháng này
@@ -26,7 +27,7 @@ class TotalAnalytics extends Controller
     	$viewDay = $this->viewDay($month); //ngày và view từng ngày của tháng
         // dd($viewDay); 
     	$totalViewId = $this->totalViewId(); //view từng view ID view tháng này, view tháng trước
-        //code sắp xếp rankNv
+        // code sắp xếp rankNv
         foreach ($statisNv as $key => $value) {
             $rankNv[$key] = $value['view_nv_month'];
         }
@@ -35,8 +36,8 @@ class TotalAnalytics extends Controller
             $rankNvYesterday[$key] = $value['view_nv_yesterday'];
         }
         arsort($rankNvYesterday);
-        ///
         //code sắp xếp rankPage
+        // dd($statisPage);
         foreach ($statisPage as $key => $value) {
             $rankPage[$key] = $value['thisMonth'];
         }
@@ -49,6 +50,83 @@ class TotalAnalytics extends Controller
     	$data=['statisNv'=>$statisNv,'statisPage'=>$statisPage,'viewDay'=>$viewDay,'viewDay'=>$viewDay,'totalViewId'=>$totalViewId,'rankNv'=>$rankNv,'rankPage'=>$rankPage,'rankNvYesterday'=>$rankNvYesterday,'rankPageYesterday'=>$rankPageYesterday];
         // dd($data);
     	return view('pages.pageTotal',['data'=>$data]);
+    }
+    /////////////////////////
+    public  function GetBetween($content,$start,$end){
+        $r = explode($start, $content);
+        if (isset($r[1])){
+            $r = explode($end, $r[1]);
+            return $r[0];
+        }
+        return 'false' ;
+    }
+    public function CheckPost(){
+       $pages = CheckPost::all()->toArray();
+       $data = [];
+       foreach ($pages as $key => $page) {
+            $slPost = CheckDay::where('page_id','=',$page['id'])->get()->toArray();
+            $data[] = $slPost;
+       }
+       $bieudo = [];
+       foreach ($data as $key => $DayAndSl) {
+        foreach ($DayAndSl as $key1 => $value) {
+            $bieudo[$key][0][] =  $value['day'];
+            $bieudo[$key][1][] =  $value['sl'];
+            $bieudo[$key][3] =  CheckPost::find($value['page_id'])->name;
+        }
+           
+       }
+       // dd($bieudo);
+    $data['bieu_do'] = $bieudo ;
+
+       $data['view_page_yesterday'] = ['name'=>'sdfjkl'];
+       return view('pages.pageCheckPost',compact('data'));
+    }
+
+
+    public  function ListView(){
+        $dt =  Carbon::create('01-10-2020') ; //tháng
+        $dataMonths=[];
+        for ($i= 1; $i < $dt->month ; $i++) { 
+        $firstMonth = '01-'.$i.'-'.$dt->year;
+        $date = new DateTime($firstMonth);
+        $date->modify('last day of this month');
+        $lastMonth = $date->format('d-m-Y') ;
+        $firstMonth = Carbon::create($firstMonth)->format('d-m-Y');
+        $dataMonths['M'.$i][0] =  $firstMonth;
+        $dataMonths['M'.$i][1] =  $lastMonth;
+        }
+        // dd($dataMonths);
+
+        $users = User::where('check','=','checked')->get();
+
+        foreach ($users as $key => $user) {
+            // dd($user->id);
+            $info = User::find($user->id)->configPages->toArray();    
+            foreach ($info as $key => $value) {
+                $data_nv[$user->name][$key]['viewId']=$value['view_id'];
+                $data_nv[$user->name][$key]['source']=$value['utm_source'];
+                $data_nv[$user->name][$key]['id']=$user->id;
+                $data_nv[$user->name] = array_unique($data_nv[$user->name],0);
+            }
+            
+        }
+        // dd($data_nv);
+        foreach ($data_nv as $nv_name => $nv) { //[nv=>viewid và source]
+
+            foreach ($nv as $key => $info) { //[viewid va source]
+                $view = $this->listViewNv($info,$dataMonths);
+                if (isset($view[0][0])) {
+                    $statisNv[$nv_name]['view_nv_beforeMonth'] = $statisNv[$nv_name]['view_nv_beforeMonth'] + $view[0][0];
+                } 
+                $statisNv[$nv_name]['id']=  $info['id'];                
+            }
+        }
+
+        return $statisNv;
+    }
+    public function listViewNv($info,$dataMonths){
+        dd($dataMonths);
     }
     /////////////////////////////////
     public function statisNv(){
@@ -139,6 +217,7 @@ class TotalAnalytics extends Controller
                     $statisPage[$page_name]['yesterday'] = 0;
                 }
     			$view = $this->statisPageMonth($info);
+                $statisPage[$page_name]['thisMonth'] = 0;
     			if (isset($view[0][0])) {
                     $statisPage[$page_name]['thisMonth'] = $view[0][0];
     				// $view_page_month[$page_name] =  $view[0][0];
@@ -280,8 +359,8 @@ class TotalAnalytics extends Controller
     }
     public function getDayOfMonth(){
      	$dayOfMonth = Carbon::today()->day;
-        if ( $dayOfMonth < 7) {
-           $dayOfMonth = 7;
+        if ( $dayOfMonth < 5) {
+           $dayOfMonth = 5;
         }
         
     			for ($i=0; $i < $dayOfMonth ; $i++) { 

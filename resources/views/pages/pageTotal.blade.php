@@ -45,7 +45,7 @@
 				<!-- CONTAINER -->
 				<div class="container-fluid content-area relative">
 					<div class="page-header"  >
-                        <h4 class="page-title" style="color: black !important"> &emsp; {{Auth::user()->name}} -- MediaNet </h4>
+                        <h4 class="page-title" style="color: black !important"> <a href="{{ route('menu.analytic_total') }}">&emsp; {{Auth::user()->name}} -- MediaNet</a></h4>
                         
                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                             @csrf
@@ -118,11 +118,11 @@
 										@csrf
 											<div class="input-group">
 												
-												<input class="form-control form-control-sm fc-datepicker" placeholder="Bắt đầu" type="text" name="startDay" value="{{$value['day']['0']}}">
+												<input class="form-control form-control-sm fc-datepicker" placeholder="Bắt đầu" type="text" name="startDay" value="{{$value['day']['0']}}" style="border-color: rgb(36, 196, 180);">
 											
-												<input class="form-control form-control-sm fc-datepicker" placeholder="Kết thúc" type="text" name="endDay" value="{{end($value['day'])}}">
+												<input class="form-control form-control-sm fc-datepicker" placeholder="Kết thúc" type="text" name="endDay" value="{{end($value['day'])}}" style="border-color: rgb(36, 196, 180);">
 												<span class="input-group-btn ml-0">
-													<button class="btn-default" style=" border-radius: 5px;" type="submit">
+													<button class="btn" style=" border-radius: 50%;background: white" type="submit">
 														<i class="fa fa-refresh" aria-hidden="true"></i>
 													</button>
 												</span>
@@ -145,18 +145,28 @@
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2">View ngày hôm qua</h6>
-													<h2 class="mb-0 display-6 font-weight-bold" style="color: #1574fb">{{number_format($value['data'][count($value['data'])-2],"0",".",".")}}</h2>
+													<h2 class="mb-0 display-6 font-weight-bold" style="color: #1574fb">
+													@php
+														if (isset($value['data'][count($value['data'])-2])) {
+															echo (number_format($value['data'][count($value['data'])-2],"0",".","."));
+														}
+														else {
+															echo ('0');
+														}
+													@endphp
+													</h2>
 												@php
-                                                if($value['data'][count($value['data'])-2] > $value['data'][count($value['data'])-3]){
-                                                    if ($value['data'][count($value['data'])-3]==0) {
-                                                        $x=0;
-                                                    }
-                                                    else {
-                                                       $x = (($value['data'][count($value['data'])-2] - $value['data'][count($value['data'])-3])/$value['data'][count($value['data'])-3])*100; 
-                                                    }
-                                                    
-                                                    $x=number_format($x,"2",".",".");
-                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với ngày hôm trước</p>');
+												if (isset($value['data'][count($value['data'])-3])) {
+                                                	if($value['data'][count($value['data'])-2] > $value['data'][count($value['data'])-3]){
+	                                                    if ($value['data'][count($value['data'])-3]==0) {
+	                                                        $x=0;
+	                                                    }
+	                                                    else {
+	                                                       $x = (($value['data'][count($value['data'])-2] - $value['data'][count($value['data'])-3])/$value['data'][count($value['data'])-3])*100; 
+	                                                    }
+	                                                    
+	                                                    $x=number_format($x,"2",".",".");
+	                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với ngày hôm trước</p>');
                                                 }
                                                 else {
                                                     if ($value['data'][count($value['data'])-3]==0) {
@@ -169,6 +179,11 @@
                                                     $x=number_format($x,"2",".",".");
                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-danger fs-13 "><i class="fa fa-long-arrow-down"></i> '.$x.'%</span> so với ngày hôm trước</p>'); 
                                                 }
+											}
+											else {
+												echo ('<p class="mb-0 text-muted"><span class="mb-0 text-danger fs-13 "><i class="fa fa-long-arrow-down"></i> 0%</span> so với ngày hôm trước</p>');
+											}
+
                                             @endphp
 												</div>
 												
@@ -256,7 +271,7 @@
 								<div class="row mr-0 ml-0">
 									@foreach ($data['rankNv'] as $nv => $view)
 										<div class="col-md-12 pr-0 pl-0">
-										<div class="card-body">
+										<div class="card-body" style="height: 123px;">
 											<div class="d-flex">
 												<div>
 													<h6 class="mb-2"><a href="{{ route('menu.analytic_nv',$data['statisNv'][$nv]['id']) }}">{{$nv}}</a></h6>
@@ -317,7 +332,7 @@
 								<div class="card-header">
 									<div class="card-title">Top view các Trang hôm qua</div>
 								</div>
-								<div class="card-body" style="height: 1107px; overflow-y: scroll;">
+								<div class="card-body" style="height: 1230px; overflow-y: scroll;">
 									@php
 										$k=100;
 									@endphp
@@ -342,7 +357,7 @@
 								<div class="card-header">
 									<div class="card-title">Top view các Trang Tháng này</div>
 								</div>
-								<div class="card-body" style="height: 1107px; overflow-y: scroll;">
+								<div class="card-body" style="height: 1230px; overflow-y: scroll;">
 									@php
 										$ki=0;
 										$k=100;
