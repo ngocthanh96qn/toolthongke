@@ -62,24 +62,22 @@ class TotalAnalytics extends Controller
     }
     public function CheckPost(){
        $pages = CheckPost::all()->toArray();
-       $data = [];
+       $dataPage = [];
        foreach ($pages as $key => $page) {
             $slPost = CheckDay::where('page_id','=',$page['id'])->get()->toArray();
-            $data[] = $slPost;
+            $dataPage[] = $slPost;
        }
        $bieudo = [];
-       foreach ($data as $key => $DayAndSl) {
-        foreach ($DayAndSl as $key1 => $value) {
-            $bieudo[$key][0][] =  $value['day'];
-            $bieudo[$key][1][] =  $value['sl'];
-            $bieudo[$key][3] =  CheckPost::find($value['page_id'])->name;
-        }
-           
+       foreach ($dataPage as $key => $DayAndSl) {
+            foreach ($DayAndSl as $key1 => $value) {
+                $bieudo[$key][0][] =  $value['day'];
+                $bieudo[$key][1][] =  $value['sl'];
+                $bieudo[$key][3] =  CheckPost::find($value['page_id'])->name;
+                $bieudo[$key][4] =  CheckPost::find($value['page_id'])->page;
+            }           
        }
-       // dd($bieudo);
     $data['bieu_do'] = $bieudo ;
-
-       $data['view_page_yesterday'] = ['name'=>'sdfjkl'];
+    // dd($data);
        return view('pages.pageCheckPost',compact('data'));
     }
 

@@ -36,6 +36,7 @@ Route::get('analytics/total', 'TotalAnalytics@index')->middleware('checkPer')->n
 Route::get('statics/teamab', 'TeamAb@index')->name('teamAb');
 Route::get('listview/nv', 'TotalAnalytics@ListView')->name('listviewNv');
 Route::get('check/post', 'TotalAnalytics@CheckPost')->name('CheckPost');
+Route::get('setup/checkpost', 'SetupCheckPost@index')->name('SetupCheckPost');
 });
 
 //ConfigInfo
@@ -56,7 +57,11 @@ Route::post('analyticsnv/total','AnalyticsNhV@setDay')->name('setDayNv');
 ///
 Route::post('teamab/save','TeamAb@store')->name('add_page');
 Route::post('teamab/delete','TeamAb@destroy')->name('delete_pageAB');
-
+//route cai dat page check post
+Route::post('store/pagecheck', 'SetupCheckPost@store')->name('store_pagecheck');
+Route::post('edit/pagecheck', 'SetupCheckPost@edit')->name('edit_pagecheck');
+Route::post('delete/pagecheck', 'SetupCheckPost@destroy')->name('delete_pagecheck');
+//
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     Artisan::call('view:clear');

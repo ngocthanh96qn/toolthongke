@@ -73,7 +73,7 @@
                         <div class="col-sm-12 col-lg-12 col-xl-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Biểu đồ chi tiết bài đăng theo ngày của {{$page[3]}}</div>
+                                    <div class="card-title">Biểu đồ chi tiết bài đăng theo ngày của <a href="https://facebook.com/{{$page[4]}}" target="_blank" style="color: red">{{$page[3]}}</a></div>
                                 </div>
                                 <div class="card-body" style="height: 214px !important;" >
                                      <canvas id="myChart{{$page[3]}}"></canvas>
@@ -135,30 +135,55 @@ for (var i = 0; i < bieudo.length; i++) {
                 borderWidth: 3, // Specify bar border width
 
             }]},
-        options: {
-          responsive: true, // Instruct chart js to respond nicely.
-          maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
-          elements: {
-            line: {
-                tension: 0 // disables bezier curves
+            options: {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                  elements: {
+                    line: {
+                        tension: 0 // disables bezier curves
+                    }
+                },
+              label: {
+                display: false,
+                text: 'Biểu đồ View Theo Ngày'
+               },
+            title: {
+            display: false,
+            text: 'Biểu đồ View Theo Ngày'
+            },
+            callbacks: { 
+               label: function(tooltipItem, data) { 
+                   return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }, 
+               },
+            legend: { 
+             display: false 
+            }, 
+            tooltips: { 
+               mode: 'label', 
+               label: 'mylabel', 
+               callbacks: { 
+                   label: function(tooltipItem, data) { 
+                       return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }, }, 
+            }, 
+            scales: {
+              xAxes: [{
+                display: false
+              }],
+              yAxes: [{
+                display: true,
+               ticks: {
+                        callback: function(label, index, labels) {
+                            return label+'Post';
+                        },
+                        beginAtZero: true
+                    },
+
+                    scaleLabel: {
+                        display: false,
+                        labelString: '1k = 1000'
+                    },
+              }],
             }
-          },
-          label: {
-            display: false,
-            text: 'Biểu đồ View Theo Ngày'
-        },
-           title: {
-            display: false,
-            text: 'Biểu đồ View Theo Ngày'
-        },
-        scales: {
-          xAxes: [{
-            display: false
-          }],
-          yAxes: [{
-            display: true
-          }],
-        }
         }
 
     });

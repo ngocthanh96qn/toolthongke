@@ -55,6 +55,12 @@
       </a>
     </li> --}}
     <li class="active">
+      <a href="{{ route('menu.SetupCheckPost') }}">
+        <i class="fa fa-cog"></i>
+        <span> CÀI ĐẶT PAGE  </span>
+      </a>
+    </li>
+    <li class="active">
       <a href="{{ route('menu.CheckPost') }}">
         <i class="fa fa-line-chart"></i>
         <span> THÔNG KÊ BÀI ĐĂNG PAGE </span>
