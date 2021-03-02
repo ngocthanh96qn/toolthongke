@@ -281,10 +281,41 @@
                     @endphp
                    @foreach ($data['view_page_yesterday'] as $name => $page)
                     <div class="row">
-                        <div class="col-sm-12 col-lg-12 col-xl-8">
+                        <div class="col-sm-12 col-lg-12 col-xl-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <div class="card-title">Biểu đồ chi tiết view theo ngày của {{$name}}</div>
+                                    <div class="card-title"> {{$name}}</div>
+                                    <div class="card-options">
+                                       
+                                            <div class="input-group">    
+                                            <h5 class="mt-2 mb-3 display-6  text-dark" style="font-family: sans-serif;">Tháng này: <b style="color:#1574fb;">{{number_format($data['view_page_thisMonth'][$name]['view_thisMonth'],"0",".",".")}}</b></h5> &emsp;
+                                             @php
+                                                if($data['view_page_thisMonth'][$name]['view_thisMonth'] > $data['view_beforeMonth'][$name]['viewBeforeMonth']){
+                                                    if ($data['view_beforeMonth'][$name]['viewBeforeMonth']==0) {
+                                                        $x=100;
+                                                    } else {
+                                                       $x = (($data['view_page_thisMonth'][$name]['view_thisMonth'] - $data['view_beforeMonth'][$name]['viewBeforeMonth'])/$data['view_beforeMonth'][$name]['viewBeforeMonth'])*100;
+                                                    }
+                                                    
+                                                    
+                                                    $x=number_format($x,"2",".",".");
+                                                    echo ('<p class="mb-0 text-muted"><span class="mb-0 text-success fs-13 "><i class="fa fa-long-arrow-up"></i> '.$x.'%</span> so với tháng trước</p>');
+                                                }
+                                                else {
+                                                    if ($data['view_beforeMonth'][$name]['viewBeforeMonth']==0) {
+                                                        $x=100;
+                                                    } else {
+                                                       $x = (($data['view_beforeMonth'][$name]['viewBeforeMonth'] - $data['view_page_thisMonth'][$name]['view_thisMonth'])/$data['view_beforeMonth'][$name]['viewBeforeMonth'])*100;
+                                                    }
+                                                    
+                                                    
+                                                    $x=number_format($x,"2",".",".");
+                                                   echo ('<p class="mb-0 text-muted"><span class="mb-0 text-danger fs-13 "><i class="fa fa-long-arrow-down"></i> '.$x.'%</span> so với tháng trước</p>'); 
+                                                }
+                                            @endphp
+                                            </div>
+                                       
+                                    </div>
                                 </div>
                                 <div class="card-body" style="height: 214px !important;" >
                                      <canvas id="myChart{{$name}}"></canvas>
@@ -292,8 +323,8 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-12 col-lg-12 col-xl-4">
-                            <div class="card">
+                        <div class="col-sm-12 col-lg-12 col-xl-6">
+                            {{-- <div class="card">
                                 <div class="card-body" style="padding: 0.5rem 1.5rem; line-height: 2.5rem !important;">
                                     <div class="d-flex">
                                         <div class="">
@@ -378,7 +409,40 @@
                                     </div>
                                 </div>
                                 
+                            </div> --}}
+                            
+                            @php
+                                $check=0;
+                            @endphp
+                   
+                        @foreach ($data['bieu_do_post'] as $key => $page)
+                        @if ($page[3]==$name)
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title"> <a href="https://facebook.com/{{$page[4]}}" target="_blank" style="color: red">{{$page[3]}}</a></div>
+                                </div>
+                                <div class="card-body" style="height: 214px !important;" >
+                                     <canvas id="myChart1{{$page[3]}}"></canvas>
+                                </div>
                             </div>
+                           
+                            @php
+                                $check=1;
+                            @endphp
+                        @endif
+                         
+                        @endforeach 
+                        @if ($check == 0)
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title"> <a href="#" target="_blank" style="color: red">Null</a></div>
+                                </div>
+                                <div class="card-body" style="height: 214px !important;" >
+                                     <canvas id="null"></canvas>
+                                </div>
+                            </div>
+                            
+                        @endif  
                         </div>
                     </div>
                     @php
@@ -387,7 +451,22 @@
                     @endforeach
 
                     <!-- ROW-3 CLOSED -->
-                     
+                    {{-- <div class="row">
+                   @foreach ($data['bieu_do_post'] as $key => $page)
+                   
+                        <div class="col-sm-12 col-lg-12 col-xl-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Biểu đồ chi tiết bài đăng theo ngày của <a href="https://facebook.com/{{$page[4]}}" target="_blank" style="color: red">{{$page[3]}}</a></div>
+                                </div>
+                                <div class="card-body" style="height: 214px !important;" >
+                                     <canvas id="myChart1{{$page[3]}}"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    @endforeach
+                    </div> --}}
                     
 
                 </div>
@@ -549,6 +628,82 @@ var color =  ['#f7b731','#564ec1','#04cad0','#f5334f','#26c2f7','#fc5296','#007e
         dateFormat: 'dd-mm-yy'
     }); 
 });
+</script>
+<script type="text/javascript">
+///////////////////////////////////////////////
+var bieudo_post =  {!! json_encode($data['bieu_do_post']) !!};
+console.log(bieudo_post);
+var color =  ['#f7b731','#564ec1','#04cad0','#f5334f','#26c2f7','#fc5296','#007ea7'];
+console.log(color[0]);
+for (var i = 0; i < bieudo_post.length; i++) {
+        var ctx = document.getElementById("myChart1"+bieudo_post[i][3]).getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: bieudo_post[i][0],
+            datasets: [{
+                label: 'Bài đăng ', // Name the series
+                data: bieudo_post[i][1], // Specify the data values array
+                fill: false,
+                borderColor: color[i], // Add custom color border (Line)
+                backgroundColor: color[i], // Add custom color background (Points and Fill)
+                borderWidth: 3, // Specify bar border width
+
+            }]},
+            options: {
+                responsive: true, // Instruct chart js to respond nicely.
+                maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                  elements: {
+                    line: {
+                        tension: 0 // disables bezier curves
+                    }
+                },
+              label: {
+                display: false,
+                text: 'Biểu đồ View Theo Ngày'
+               },
+            title: {
+            display: false,
+            text: 'Biểu đồ View Theo Ngày'
+            },
+            callbacks: { 
+               label: function(tooltipItem, data) { 
+                   return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }, 
+               },
+            legend: { 
+             display: false 
+            }, 
+            tooltips: { 
+               mode: 'label', 
+               label: 'mylabel', 
+               callbacks: { 
+                   label: function(tooltipItem, data) { 
+                       return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }, }, 
+            }, 
+            scales: {
+              xAxes: [{
+                display: false
+              }],
+              yAxes: [{
+                display: true,
+               ticks: {
+                        callback: function(label, index, labels) {
+                            return label+'Post';
+                        },
+                        beginAtZero: true
+                    },
+
+                    scaleLabel: {
+                        display: false,
+                        labelString: '1k = 1000'
+                    },
+              }],
+            }
+        }
+
+    });
+}
+
 </script>
     </body>
 </html>

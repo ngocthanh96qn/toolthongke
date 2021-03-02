@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ConfigPage;
+use App\ConfigInfo;
+use App\PageTeamAb;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Requests\PageRequest;
@@ -14,11 +16,16 @@ class ConfigPageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-         $users = User::all()->toArray();
-         foreach ($users as $key => $user) {
-            $info = User::find($user['id'])->configInfos->toArray(); 
-            $page = User::find($user['id'])->configPages;
+    {   
+        $teamIAs = ConfigInfo::where('team_nv','=','Team_IA')->get()->toArray();
+        $teamABs = ConfigInfo::where('team_nv','=','Team_AB')->get()->toArray();
+        // dd($teamIAs);
+        $info_userAB=[];
+         foreach ($teamIAs as $key => $teamIA) {
+            // $info = User::find($$teamIA['user_id'])->configInfos->toArray(); 
+            // dd($teamIA);
+            $page = ConfigPage::where('user_id','=',$teamIA['user_id'])->get();
+            // dd($page);
             if($page != null ) {
                 $page = $page->toArray();
             }
@@ -26,11 +33,26 @@ class ConfigPageController extends Controller
                 $page = [];
                 
             }
-            
-            $info_user[] = ['user_id'=>$user['id'], 'name'=>$user['name'], 'name_page'=>$page];           
+            // dd(User::find($teamIA['user_id'])->name);
+            $info_userIA[] = ['user_id'=>$teamIA['user_id'], 'name'=>User::find($teamIA['user_id'])->name, 'name_page'=>$page];           
         }
-    // dd($info_user);
-        return view('pages.setup_page',['info_user'=>$info_user]);
+        $info_userAB=[];
+        foreach ($teamABs as $key => $teamAB) {
+            $page = PageTeamAb::where('user_id','=',$teamAB['user_id'])->get();
+            // dd($page);
+            if($page != null ) {
+                $page = $page->toArray();
+            }
+            else{
+                $page = [];
+                
+            }
+            // dd(User::find($teamIA['user_id'])->name);
+
+            $info_userAB[] = ['user_id'=>$teamAB['user_id'], 'name'=>User::find($teamAB['user_id'])->name, 'name_page'=>$page];           
+        }
+    // dd($info_userAB);
+        return view('pages.setup_page',['info_userIA'=>$info_userIA,'info_userAB'=>$info_userAB]);
     }
 
     /**
@@ -75,7 +97,7 @@ class ConfigPageController extends Controller
      */
     public function edit(Request $request)
     {
-       $data_page = ['name_page'=>$request->name_page,'view_id'=>$request->view_id,'utm_source'=>$request->utm_source, 'utm_medium'=>$request->utm_medium];
+       $data_page = ['name_page'=>$request->name_page,'view_id'=>$request->view_id,'utm_source'=>$request->utm_source, 'utm_medium'=>$request->utm_medium, 'username'=>$request->username];
        $info = ConfigPage::where('id','=',$request->pageid)->update($data_page);
        return redirect()->route('menu.setup_page');
        

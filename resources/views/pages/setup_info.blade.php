@@ -121,6 +121,7 @@
                   <th>Quyền</th>
                   <th>Chỉnh sửa</th>
                   <th>Xóa</th>
+                  
                 </tr>
                 </thead>
                 <tbody>
@@ -135,7 +136,8 @@
                    <td>{{$info['role']}}</td>
                    <td> <button class="btn btn-primary btn-xs edit_info"  data-toggle="modal" data-target="#modal-default"  data-name ='{{$info['name']}}' data-phone ='{{$info['phone_nv']}}' data-mail ='{{$info['mail_nv']}}' data-team ='{{$info['team_nv']}}' data-userid='{{$info['user_id']}}' ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
 
-                   <td  data-toggle="modal" data-target="#modal-danger" > <button class="btn btn-danger btn-xs delete_info" data-userid='{{$info['user_id']}}'><i class="fa fa-trash-o"></i></button> </td>
+                   <td  data-toggle="modal" data-target="#modal-danger" > <button class="btn btn-danger btn-xs delete_info" data-useriddelete='{{$info['user_id']}}'><i class="fa fa-trash-o"></i></button> </td>
+                   
                  </tr>
                  
                @endforeach
@@ -275,29 +277,6 @@
 
 
 @push('scripts')
-        <!-- DataTables -->
-<script src={{asset("admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js")}}></script>
-<script src={{asset("admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}></script>
-<!-- SlimScroll -->
-<script src={{asset("admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}></script>
-<!-- FastClick -->
-<script src={{asset("admin-lte/bower_components/fastclick/lib/fastclick.js")}}></script>
-<!-- AdminLTE for demo purposes -->
-<script src={{asset("admin-lte/dist/js/demo.js")}}></script>
-<!-- page script -->
-<script>
-  $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
-</script>
 <script>
 $(function(){
 
@@ -324,6 +303,7 @@ $(function(){
         var phone = $(this).data("phone"); 
         var team = $(this).data("team");
         var userid = $(this).data("userid");
+         console.log(userid);
         document.getElementById("edit_name").value=(name);
         document.getElementById("edit_mail").value=(mail);
         document.getElementById("edit_phone").value=(phone);
@@ -332,8 +312,10 @@ $(function(){
         });
 
         $('.delete_info').click(function(){
-        var userid = $(this).data("userid");
-         document.getElementById("delete_id").value=(userid);
+
+        var useridaa = $(this).data("useriddelete");
+        console.log(useridaa);
+         document.getElementById("delete_id").value=(useridaa);
          });
         $('.reset-pass').click(function(){
         var userid = $(this).data("userid");
@@ -342,4 +324,28 @@ $(function(){
         
 });
 </script>
+        <!-- DataTables -->
+<script src={{asset("admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js")}}></script>
+<script src={{asset("admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js")}}></script>
+<!-- SlimScroll -->
+<script src={{asset("admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}></script>
+<!-- FastClick -->
+<script src={{asset("admin-lte/bower_components/fastclick/lib/fastclick.js")}}></script>
+<!-- AdminLTE for demo purposes -->
+<script src={{asset("admin-lte/dist/js/demo.js")}}></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+
 @endpush

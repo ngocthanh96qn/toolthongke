@@ -74,21 +74,34 @@ function file_get_html(
 	 * For sourceforge users: uncomment the next line and comment the
 	 * retrieve_url_contents line 2 lines down if it is not already done.
 	 */
-	$contents = file_get_contents(
+	
+
+	try {
+    $contents = file_get_contents(
 		$url,
 		$use_include_path,
 		$context,
 		$offset,
 		$maxLen
 	);
+    if (empty($contents) || strlen($contents) > $maxLen){
+       throw new Exception("failed to open stream ", 1);
+    }else{
+       return $dom->load($contents, $lowercase, $stripRN);
+     }
+
+} catch (Exception $e) {
+   		$dom->clear();
+		return false; 
+}
 	// $contents = retrieve_url_contents($url);
 
-	if (empty($contents) || strlen($contents) > $maxLen) {
-		$dom->clear();
-		return false;
-	}
+	// if (empty($contents) || strlen($contents) > $maxLen) {
+	// 	$dom->clear();
+	// 	return false;
+	// }
 
-	return $dom->load($contents, $lowercase, $stripRN);
+	
 }
 
 function str_get_html(

@@ -37,6 +37,7 @@ Route::get('statics/teamab', 'TeamAb@index')->name('teamAb');
 Route::get('listview/nv', 'TotalAnalytics@ListView')->name('listviewNv');
 Route::get('check/post', 'TotalAnalytics@CheckPost')->name('CheckPost');
 Route::get('setup/checkpost', 'SetupCheckPost@index')->name('SetupCheckPost');
+Route::get('analytics/reach', 'TrafficPageTeamAbController@index')->name('Reach_Ab');
 });
 
 //ConfigInfo
@@ -48,6 +49,13 @@ Route::post('edit/pass', 'ConfigInfoController@editPass')->name('edit_pass');
 Route::post('store/page', 'ConfigPageController@store')->name('store_page');
 Route::post('edit/page', 'ConfigPageController@edit')->name('edit_page');
 Route::post('delete/page', 'ConfigPageController@destroy')->name('delete_page');
+//nhap du lieu team AB
+Route::get('inputdata','TrafficPageTeamAbController@inputData'); 
+Route::post('inputdata/add','TrafficPageTeamAbController@store')->name('add_data_ab'); 
+//ConfigPageAb 
+Route::post('store/pageab', 'PageTeamAbController@store')->name('store_page_ab');
+Route::post('edit/pageab', 'PageTeamAbController@edit')->name('edit_page_ab');
+Route::post('delete/pageab', 'PageTeamAbController@destroy')->name('delete_page_ab');
 //setup thong ke tong
 Route::get('setup/total','TotalAnalytics@setupTotal')->name('setup_total');
 Route::post('setup/total/user','TotalAnalytics@setupUser')->name('setup_user');

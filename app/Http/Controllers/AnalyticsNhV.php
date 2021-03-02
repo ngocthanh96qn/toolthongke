@@ -11,6 +11,7 @@ use DateTime;
 use App\ConfigPage;
 use App\ConfigInfo;
 use App\User;
+use App\CheckDay;
 use Auth;
 
 class AnalyticsNhV extends Controller
@@ -70,11 +71,33 @@ class AnalyticsNhV extends Controller
     $data['name'] = $nameUser;
     $data['viewDay'] = $viewDay;
     $data['id'] = $id;
+    $data['bieu_do_post'] = $this->dataCheckPost($id);
     // dd($data);
         return view('pages.pageNv',['data'=>$data]);
     }
 
+    public function dataCheckPost($id){
+       $pages =  ConfigPage::where('user_id','=',$id)->get()->toArray();
 
+       $dataPage = [];
+       foreach ($pages as $key => $page) {
+            $slPost = CheckDay::where('page_id','=',$page['id'])->get()->toArray();
+            $dataPage[] = $slPost;
+       }
+       // dd($dataPage);
+
+       $bieudo = [];
+       foreach ($dataPage as $key => $DayAndSl) {
+            foreach ($DayAndSl as $key1 => $value) {
+                $bieudo[$key][0][] =  $value['day'];
+                $bieudo[$key][1][] =  $value['sl'];
+                $bieudo[$key][3] =  ConfigPage::find($value['page_id'])->name_page;
+                $bieudo[$key][4] =  ConfigPage::find($value['page_id'])->username;
+            }           
+       }
+
+    return $bieudo;
+    }
 
     public function viewDay($pages,$month){
         foreach ($month as $key11 => $days) {

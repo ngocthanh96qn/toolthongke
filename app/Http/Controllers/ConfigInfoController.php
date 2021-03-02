@@ -118,6 +118,7 @@ public function editPass(Request $request)
      */
     public function destroy(Request $request)
     {
+        // dd($request->toArray());
         $info = User::find($request->id)->configInfos;
         $info->delete();
         $user = User::find($request->id);

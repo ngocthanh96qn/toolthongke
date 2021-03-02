@@ -5,18 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\CheckPost;
 use App\CheckDay;
+use App\ConfigPage;
+use DB;
 include_once ('./simple_html_dom.php');
 
 class CronJob extends Controller
 {
     public function runScheduleTotal(){
-        $Pages = CheckPost::all()->toArray();
+        // $Pages = DB::table('config_pages')->whereNotNull('username')->get();
+        $Pages = ConfigPage::whereNotNull('username')->get()->toArray();
+        // dd($Pages);
         $data=[];
         foreach ($Pages as $key => $page) {
-          $data = $this->StaticsPost($page['page']);
-          CheckDay::updateOrCreate(['page_id' => $page['id'], 'day' => $data[0]],['sl' => $data[1]]);
-        }
+          $data = $this->StaticsPost($page['username']);
+          if ($data !== false) {
+              CheckDay::updateOrCreate(['page_id' => $page['id'], 'day' => $data[0]],['sl' => $data[1]]);
+          }
          
+          $mang[]=$data;
+        }
+         dd($mang);
     }
 
         public function StaticsPost($usernamePage){
@@ -30,7 +38,12 @@ class CronJob extends Controller
 
     $context = stream_context_create($opts);
     $html = file_get_html($url , false, $context);
-    foreach($html->find('abbr') as $e)
+    // dd($html);
+    if ($html==false) {
+        return false;
+    }
+    else {
+        foreach($html->find('abbr') as $e)
     {
         // echo $e->outertext . '<br>';
         $time[] = $this->GetBetween($e->outertext, 'data-utime="','"');
@@ -55,6 +68,8 @@ class CronJob extends Controller
     $today[0] = $dates[0];
     $today[1] = $Sl;
     return $today;
+    }
+    
 }
 public  function GetBetween($content,$start,$end){
         $r = explode($start, $content);

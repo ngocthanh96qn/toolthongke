@@ -48,6 +48,12 @@
         <span> XEM THỐNG KÊ TEAM IA </span>
       </a>
     </li>
+    <li class="active">
+      <a href="{{ route('menu.Reach_Ab') }}">
+        <i class="fa fa-line-chart"></i>
+        <span> XEM THỐNG KÊ TEAM AB </span>
+      </a>
+    </li>
    {{--  <li class="active">
       <a href="{{ route('menu.listviewNv') }}">
         <i class="fa fa-line-chart"></i>
